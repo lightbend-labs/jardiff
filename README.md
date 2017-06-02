@@ -10,9 +10,9 @@ Usage Examples
 --------------
 
 ```
-% sbt runMain scala.tools.jardiff.Main /tmp/out1.jar /tmp/out2.jar
+% sbt 'core/run /tmp/out1.jar /tmp/out2.jar'
 
-% sbt runMain scala.tools.jardiff.Main --git-repo /tmp/diff-repo /tmp/out1 /tmp/out2
+% sbt 'core/run --git-repo /tmp/diff-repo /tmp/out1 /tmp/out2'
 ```
 
 License
