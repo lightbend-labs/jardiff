@@ -22,8 +22,8 @@ object IOUtil {
     Files.walkFileTree(source, util.EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, new FileVisitor[Path] {
       def preVisitDirectory(dir: Path, sourceBasic: BasicFileAttributes): FileVisitResult = {
         val relative = source.relativize(dir).toString
-        if (!Files.exists(target.getFileSystem.getPath(relative)))
-          Files.createDirectory(target.getFileSystem.getPath(relative))
+        if (!Files.exists(target.resolve(relative)))
+          Files.createDirectory(target.resolve(relative))
         FileVisitResult.CONTINUE
       }
 
