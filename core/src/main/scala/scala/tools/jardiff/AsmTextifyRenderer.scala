@@ -19,6 +19,7 @@ class AsmTextifyRenderer(code: Boolean) extends FileRenderer {
     val node = zapScalaClassAttrs(sortClassMembers(classFromBytes(classBytes)))
     if (!code)
       node.methods.forEach(_.instructions.clear())
+    Files.createDirectories(out.getParent)
     val pw = new PrintWriter(Files.newBufferedWriter(out))
     try {
       val trace = new TraceClassVisitor(pw)

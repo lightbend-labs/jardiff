@@ -13,7 +13,7 @@ import org.eclipse.jgit.revwalk.RevCommit
 
 import scala.tools.jardiff.JGitUtil._
 
-final class JarDiff(file1: Path, file2: Path, config: JarDiff.Config, renderers: Map[String, FileRenderer]) {
+final class JarDiff(file1: Path, file2: Path, config: JarDiff.Config, renderers: Map[String, List[FileRenderer]]) {
   private val targetBase = config.gitRepo.getOrElse(Files.createTempDirectory("jardiff-"))
 
   def diff(): Unit = {
@@ -51,11 +51,9 @@ final class JarDiff(file1: Path, file2: Path, config: JarDiff.Config, renderers:
       (sourceFile, targetFile) =>
         val ix = sourceFile.getFileName.toString.lastIndexOf(".")
         val extension = if (ix >= 0) sourceFile.getFileName.toString.substring(ix + 1) else ""
-        renderers.get(extension) match {
-          case Some(renderer) =>
-            val outPath = targetFile.resolveSibling(targetFile.getFileName + renderer.outFileExtension)
-            renderer.render(sourceFile, outPath)
-          case None =>
+        for (renderer <- renderers.getOrElse(extension, Nil)) {
+          val outPath = targetFile.resolveSibling(targetFile.getFileName + renderer.outFileExtension)
+          renderer.render(sourceFile, outPath)
         }
     }
   }
@@ -63,7 +61,7 @@ final class JarDiff(file1: Path, file2: Path, config: JarDiff.Config, renderers:
 
 object JarDiff {
   def apply(file1: Path, file2: Path, config: JarDiff.Config) = {
-    val renderers = Map("class" -> new AsmTextifyRenderer(config.code)).withDefault(_ => IdentityRenderer)
+    val renderers = Map("class" -> List(new AsmTextifyRenderer(config.code), new ScalapRenderer())).withDefault(_ => List(IdentityRenderer))
     new JarDiff(file1, file2, config, renderers)
   }
 

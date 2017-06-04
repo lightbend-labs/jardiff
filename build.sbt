@@ -70,6 +70,7 @@ lazy val core = (
   settings(libraryDependencies ++= Seq(
     "commons-cli" % "commons-cli" % "1.4",
     "org.scala-lang.modules" % "scala-asm" % "5.1.0-scala-2",
+    "org.scala-lang" % "scalap" % System.getProperty("scalap.version", scalaVersion.value),
     "org.eclipse.jgit" % "org.eclipse.jgit" % "4.6.0.201612231935-r",
     "org.slf4j" % "slf4j-api" % "1.7.24",
     "org.slf4j" % "log4j-over-slf4j" % "1.7.24", // for any java classes looking for this
