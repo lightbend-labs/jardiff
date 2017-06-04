@@ -27,7 +27,7 @@ object Main {
     val Git = new cli.Option("g", "git", true, "Directory to output a git repository containing the diff")
     Git.setArgName("dir")
     val NoCode = new cli.Option("c", "suppress-code", false, "Suppress method bodies")
-    val ContextLines = new cli.Option("U", "--unified", true, "Suppress method bodies")
+    val ContextLines = new cli.Option("U", "--unified", true, "Number of context lines in diff")
     ContextLines.setArgName("n")
     def apply(): Options = {
       new cli.Options().addOption(Help).addOption(Git).addOption(ContextLines).addOption(NoCode)
