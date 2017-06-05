@@ -26,7 +26,7 @@ After cloning this project. and use `sbt clean core/assembly`.
 ```
 % cd /code/jardiff
 
-% sbt clean core/assembly`
+% sbt clean core/assembly
 
 % function jardiff() {   java $JAVA_OPTS -jar /code/jardiff/core/target/scala-2.12/jardiff-core-assembly-*.jar "$@"; }
 
