@@ -14,12 +14,8 @@ scala:
 jdk:
   - oraclejdk8
 
-env:
-  matrix:
-    - TEST_COMMAND="scripted"
-
 script:
-  - sbt $TEST_COMMAND
+  - sbt package
 
   # Tricks to avoid unnecessary cache updates
   - find $HOME/.sbt -name "*.lock" | xargs rm
