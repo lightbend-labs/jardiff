@@ -21,14 +21,16 @@ location for the repository that can be inspected after the tool has run.
 Building and Running
 --------------------
 
-After cloning this project. and use `sbt clean core/assembly`.
+After cloning this project, use `sbt clean core/assembly`.
 
 ```
 % cd /code/jardiff
 
 % sbt clean core/assembly
 
-% function jardiff() {   java $JAVA_OPTS -jar /code/jardiff/core/target/scala-2.12/jardiff-core-assembly-*.jar "$@"; }
+% function jardiff() {
+    java $JAVA_OPTS -jar /code/jardiff/core/target/scala-2.12/jardiff-core-assembly-*.jar "$@";
+}
 
 % jardiff -h
 usage: jardiff [-c] [-g <dir>] [-h] [-q] [-U <n>] VERSION1 [VERSION2 ...]
