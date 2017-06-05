@@ -24,7 +24,13 @@ final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: Map[St
 
     def renderAndCommit(f: Path): RevCommit = {
       git.rm().setCached(true).addFilepattern(".")
-      renderFiles(IOUtil.rootPath(f))
+
+      val root = IOUtil.rootPath(f)
+      if (Files.isDirectory(root))
+        renderFiles(root)
+      else
+        renderFile(f.getParent)(f, targetBase.resolve(f.getFileName))
+
       git.add().addFilepattern(".").call()
       git.commit().setMessage("jardiff textified output of: " + f).call()
     }
@@ -67,14 +73,15 @@ final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: Map[St
   }
 
   private def renderFiles(sourceBase: java.nio.file.Path) = {
-    IOUtil.mapRecursive(sourceBase, targetBase) {
-      (sourceFile, targetFile) =>
-        val ix = sourceFile.getFileName.toString.lastIndexOf(".")
-        val extension = if (ix >= 0) sourceFile.getFileName.toString.substring(ix + 1) else ""
-        for (renderer <- renderers.getOrElse(extension, Nil)) {
-          val outPath = targetFile.resolveSibling(targetFile.getFileName + renderer.outFileExtension)
-          renderer.render(sourceFile, outPath)
-        }
+    IOUtil.mapRecursive(sourceBase, targetBase)(renderFile(sourceBase))
+  }
+
+  private def renderFile(sourceBase: Path)(sourceFile: Path, targetFile: Path) = {
+    val ix = sourceFile.getFileName.toString.lastIndexOf(".")
+    val extension = if (ix >= 0) sourceFile.getFileName.toString.substring(ix + 1) else ""
+    for (renderer <- renderers.getOrElse(extension, Nil)) {
+      val outPath = targetFile.resolveSibling(targetFile.getFileName + renderer.outFileExtension)
+      renderer.render(sourceFile, outPath)
     }
   }
 }

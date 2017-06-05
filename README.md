@@ -24,11 +24,11 @@ Building and Running
 After cloning this project. and use `sbt clean core/assembly`.
 
 ```
-% cd jardiff
+% cd /code/jardiff
 
 % sbt clean core/assembly`
 
-% alias jardiff="java -jar $PWD/core/target/scala-2.12/jardiff-core-assembly-*.jar"
+% function jardiff() {   java $JAVA_OPTS -jar /code/jardiff/core/target/scala-2.12/jardiff-core-assembly-*.jar "$@"; }
 
 % jardiff -h
   usage: jardiff [-c] [-g <dir>] [-h] [-q] [-U <n>] <jar/directory/url> [<jar/directory/url> ...]
@@ -39,9 +39,11 @@ After cloning this project. and use `sbt clean core/assembly`.
    -U,--unified <n>     Number of context lines in diff
 
 
-% jardiff dir1 dir2"
+% jardiff dir1 dir2
 
-% jardiff --git-repo /tmp/diff-repo --quiet v1.jar v2.jar v3.jar"
+% jardiff v1/A.class v2/A.class
+
+% jardiff --git-repo /tmp/diff-repo --quiet v1.jar v2.jar v3.jar
 ```
 
 We plan to publish a binary release soon to make this more convenient.
