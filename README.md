@@ -66,6 +66,8 @@ class C extends T
 % ~/scala/2.11/bin/scalac -d /tmp/v1 test.scala && ~/scala/2.12/bin/scalac -d /tmp/v2 test.scala
 
 % jardiff /tmp/v1 /tmp/v2
+```
+```diff
 diff --git a/C.class.asm b/C.class.asm
 index f3a33f1..33b9282 100644
 --- a/C.class.asm
@@ -140,3 +142,58 @@ index 9180093..fcac19f 100644
 ```
 
 Browsable Repo: [scala-library-diff](https://github.com/retronym/scala-library-diff/commits/master)
+
+### API changes visible in bytecode descriptors / generic signature / scalap output
+
+```scala
+// V1.scala
+trait C {
+  def m1(a: String)
+  def m2(a: Option[String])
+  def m3(a: String)
+}
+```
+```scala
+// V2.scala
+trait C {
+  def m1(a: AnyRef)
+  def m2(a: Option[AnyRef])
+  def m3(a: scala.collection.immutable.StringOps) // value class
+}
+```
+
+```diff
+diff --git a/C.class.asm b/C.class.asm
+index 52a43d5..bdb0541 100644
+--- a/C.class.asm
++++ b/C.class.asm
+@@ -4,12 +4,12 @@
+ 
+ 
+   // access flags 0x401
+-  public abstract m1(Ljava/lang/String;)V
++  public abstract m1(Ljava/lang/Object;)V
+     // parameter final  a
+ 
+   // access flags 0x401
+-  // signature (Lscala/Option<Ljava/lang/String;>;)V
+-  // declaration: void m2(scala.Option<java.lang.String>)
++  // signature (Lscala/Option<Ljava/lang/Object;>;)V
++  // declaration: void m2(scala.Option<java.lang.Object>)
+   public abstract m2(Lscala/Option;)V
+     // parameter final  a
+ 
+diff --git a/C.class.scalap b/C.class.scalap
+index 78f7d91..637cd98 100644
+--- a/C.class.scalap
++++ b/C.class.scalap
+@@ -1,5 +1,5 @@
+ trait C extends scala.AnyRef {
+-  def m1(a: scala.Predef.String): scala.Unit
+-  def m2(a: scala.Option[scala.Predef.String]): scala.Unit
+-  def m3(a: scala.Predef.String): scala.Unit
++  def m1(a: scala.AnyRef): scala.Unit
++  def m2(a: scala.Option[scala.AnyRef]): scala.Unit
++  def m3(a: scala.collection.immutable.StringOps): scala.Unit
+ }
+```
