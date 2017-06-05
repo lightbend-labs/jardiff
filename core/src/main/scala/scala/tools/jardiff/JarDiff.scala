@@ -85,9 +85,11 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
   private def renderFile(sourceBase: Path)(sourceFile: Path, targetFile: Path) = {
     val ix = sourceFile.getFileName.toString.lastIndexOf(".")
     val extension = if (ix >= 0) sourceFile.getFileName.toString.substring(ix + 1) else ""
-    for (renderer <- renderers(extension)) { // not getOrElse(Nil), we want to respect the default value of the map
-      val outPath = targetFile.resolveSibling(targetFile.getFileName + renderer.outFileExtension)
-      renderer.render(sourceFile, outPath)
+    if (!Files.isSymbolicLink(sourceFile)) {
+      for (renderer <- renderers(extension)) { // not getOrElse(Nil), we want to respect the default value of the map
+        val outPath = targetFile.resolveSibling(targetFile.getFileName + renderer.outFileExtension)
+        renderer.render(sourceFile, outPath)
+      }
     }
   }
 }
