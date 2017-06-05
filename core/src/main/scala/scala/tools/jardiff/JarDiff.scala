@@ -14,7 +14,7 @@ import org.eclipse.jgit.treewalk.EmptyTreeIterator
 
 import scala.tools.jardiff.JGitUtil._
 
-final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: Map[String, List[FileRenderer]]) {
+final class Jar Diff(files: List[Path], config: JarDiff.Config, renderers: Map[String, List[FileRenderer]]) {
   private val targetBase = config.gitRepo.getOrElse(Files.createTempDirectory("jardiff-"))
 
   def diff(): Unit = {
