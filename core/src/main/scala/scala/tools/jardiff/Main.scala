@@ -9,7 +9,9 @@ import java.nio.file._
 
 import org.apache.commons.cli
 import org.apache.commons.cli.{CommandLine, DefaultParser, HelpFormatter, Options}
+import org.eclipse.jgit.util.io.NullOutputStream
 
+import scala.collection.JavaConverters.collectionAsScalaIterableConverter
 import scala.util.Try
 import scala.util.control.NonFatal
 
@@ -27,10 +29,11 @@ object Main {
     val Git = new cli.Option("g", "git", true, "Directory to output a git repository containing the diff")
     Git.setArgName("dir")
     val NoCode = new cli.Option("c", "suppress-code", false, "Suppress method bodies")
+    val Quiet = new cli.Option("q", "quiet", false, "Don't output diffs to standard out")
     val ContextLines = new cli.Option("U", "--unified", true, "Number of context lines in diff")
     ContextLines.setArgName("n")
     def apply(): Options = {
-      new cli.Options().addOption(Help).addOption(Git).addOption(ContextLines).addOption(NoCode)
+      new cli.Options().addOption(Help).addOption(Git).addOption(ContextLines).addOption(NoCode).addOption(Quiet)
     }
   }
   private implicit class RichCommandLine(val self: CommandLine) {
@@ -46,7 +49,7 @@ object Main {
     try {
       formatter.printHelp(writer, 80, "jardiff", "", Opts(), HelpFormatter.DEFAULT_LEFT_PAD, HelpFormatter.DEFAULT_DESC_PAD, "", true)
       writer.flush()
-      baos.toString().replaceFirst("\n", " <jar/directory/url> <jar/directory/url>\n")
+      baos.toString().replaceFirst("\n", " <jar/directory/url> [<jar/directory/url> ...]\n")
     } finally {
       writer.close()
     }
@@ -58,15 +61,22 @@ object Main {
     try {
       val line = parser.parse(Opts(), args)
       val trailingArgs = line.getArgList
-      if (line.has(Opts.Help) || trailingArgs.size() != 2) {
-        System.out.println(helpText)
+      if (line.has(Opts.Help)) {
         ShowUsage(helpText)
       } else {
         val gitRepo = if (line.has(Opts.Git)) Some(Paths.get(line.get(Opts.Git))) else None
-        val config = JarDiff.Config(gitRepo, !line.has(Opts.NoCode), line.getOptInt(Opts.ContextLines), System.out)
-        val jarDiff = JarDiff(Paths.get(trailingArgs.get(0)), Paths.get(trailingArgs.get(1)), config)
-        jarDiff.diff()
-        Success
+        val diffOutputStream = if (line.has(Opts.Quiet)) NullOutputStream.INSTANCE else System.out
+        val config = JarDiff.Config(gitRepo, !line.has(Opts.NoCode), line.getOptInt(Opts.ContextLines), diffOutputStream)
+        val paths = trailingArgs.asScala.map(Paths.get(_)).toList
+        paths match {
+          case Nil => ShowUsage(helpText)
+          case _ =>
+            val jarDiff = JarDiff(paths, config)
+            jarDiff.diff()
+            Success
+
+
+        }
       }
     } catch {
       case exp: cli.ParseException => ShowUsage(helpText)

@@ -10,10 +10,11 @@ import java.nio.file._
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffFormatter
 import org.eclipse.jgit.revwalk.RevCommit
+import org.eclipse.jgit.treewalk.EmptyTreeIterator
 
 import scala.tools.jardiff.JGitUtil._
 
-final class JarDiff(file1: Path, file2: Path, config: JarDiff.Config, renderers: Map[String, List[FileRenderer]]) {
+final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: Map[String, List[FileRenderer]]) {
   private val targetBase = config.gitRepo.getOrElse(Files.createTempDirectory("jardiff-"))
 
   def diff(): Unit = {
@@ -27,10 +28,19 @@ final class JarDiff(file1: Path, file2: Path, config: JarDiff.Config, renderers:
       git.add().addFilepattern(".").call()
       git.commit().setMessage("jardiff textified output of: " + f).call()
     }
+    files match {
+      case head :: Nil =>
+        val commit = renderAndCommit(head)
+        printInitialDiff(git, commit)
+      case _ =>
+        val commits = files.iterator.map(renderAndCommit)
+        commits.sliding(2).foreach {
+          case Seq(commit1, commit2) =>
+            printDiff(git, commit1, commit2)
+        }
+    }
 
-    val commit1 = renderAndCommit(file1)
-    val commit2 = renderAndCommit(file2)
-    printDiff(git, commit1, commit2)
+
     if (config.gitRepo.isEmpty)
       IOUtil.deleteRecursive(targetBase)
   }
@@ -41,6 +51,16 @@ final class JarDiff(file1: Path, file2: Path, config: JarDiff.Config, renderers:
     config.contextLines.foreach{lines => cmd.setContextLines(lines); diffFormatter.setContext(lines)}
     cmd.setOldTree(getCanonicalTreeParser(git, commit1))
     cmd.setNewTree(getCanonicalTreeParser(git, commit2))
+    val diffEntries = cmd.call()
+    diffFormatter.setRepository(git.getRepository)
+    diffFormatter.format(diffEntries)
+  }
+  private def printInitialDiff(git: Git, initialCommit: RevCommit): Unit = {
+    val cmd = git.diff()
+    val diffFormatter = new DiffFormatter(config.diffOutputStream)
+    config.contextLines.foreach{lines => cmd.setContextLines(lines); diffFormatter.setContext(lines)}
+    cmd.setOldTree(new EmptyTreeIterator())
+    cmd.setNewTree(getCanonicalTreeParser(git, initialCommit))
     val diffEntries = cmd.call()
     diffFormatter.setRepository(git.getRepository)
     diffFormatter.format(diffEntries)
@@ -60,9 +80,9 @@ final class JarDiff(file1: Path, file2: Path, config: JarDiff.Config, renderers:
 }
 
 object JarDiff {
-  def apply(file1: Path, file2: Path, config: JarDiff.Config) = {
+  def apply(files: List[Path], config: JarDiff.Config) = {
     val renderers = Map("class" -> List(new AsmTextifyRenderer(config.code), new ScalapRenderer())).withDefault(_ => List(IdentityRenderer))
-    new JarDiff(file1, file2, config, renderers)
+    new JarDiff(files, config, renderers)
   }
 
   case class Config(gitRepo: Option[Path], code: Boolean, contextLines: Option[Int], diffOutputStream: OutputStream)
