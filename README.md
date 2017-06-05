@@ -18,28 +18,30 @@ argument is provided, the initial commit is rendered.
 By default, a temporary git repository is used and deleted on exit. Use `--git` to provide a custom
 location for the repository that can be inspected after the tool has run.   
 
-Usage
------
+Building and Running
+--------------------
+
+After cloning this project. and use `sbt clean core/assembly`.
 
 ```
-usage: jardiff [-c] [-g <dir>] [-h] [-q] [-U <n>] <jar/directory/url> [<jar/directory/url> ...]
- -c,--suppress-code   Suppress method bodies
- -g,--git <dir>       Directory to output a git repository containing the diff
- -h,--help            Display this message
- -q,--quiet           Don't output diffs to standard out
- -U,----unified <n>   Number of context lines in diff
-```
+% cd jardiff
+
+% sbt clean core/assembly`
+
+% alias jardiff="java -jar $PWD/core/target/scala-2.12/jardiff-core-assembly-*.jar"
+
+% jardiff -h
+  usage: jardiff [-c] [-g <dir>] [-h] [-q] [-U <n>] <jar/directory/url> [<jar/directory/url> ...]
+   -c,--suppress-code   Suppress method bodies
+   -g,--git <dir>       Directory to output a git repository containing the diff
+   -h,--help            Display this message
+   -q,--quiet           Don't output diffs to standard out
+   -U,--unified <n>     Number of context lines in diff
 
 
-Invoking
---------
+% jardiff dir1 dir2"
 
-Clone this project and use `sbt` to execute:
-
-```
-% sbt "core/run /tmp/out1.jar /tmp/out2.jar"
-
-% sbt "core/run scala.tools.jardiff.Main --git-repo /tmp/diff-repo /tmp/out1 /tmp/out2"
+% jardiff --git-repo /tmp/diff-repo --quiet v1.jar v2.jar v3.jar"
 ```
 
 We plan to publish a binary release soon to make this more convenient.
@@ -47,4 +49,89 @@ We plan to publish a binary release soon to make this more convenient.
 Sample Output
 -------------
 
-https://github.com/retronym/scala-library-diff/commits/master
+### Scala 2.11 vs 2.12 trait encoding changes
+
+```scala
+// test.scala
+trait T { def foo = 4 }
+class C extends T
+```
+
+```
+% ~/scala/2.11/bin/scalac -d /tmp/v1 test.scala && ~/scala/2.12/bin/scalac -d /tmp/v2 test.scala
+
+% jardiff /tmp/v1 /tmp/v2
+diff --git a/C.class.asm b/C.class.asm
+index f3a33f1..33b9282 100644
+--- a/C.class.asm
++++ b/C.class.asm
+@@ -1,4 +1,4 @@
+-// class version 50.0 (50)
++// class version 52.0 (52)
+ // access flags 0x21
+ public class C implements T  {
+ 
+@@ -8,7 +8,7 @@
+     ALOAD 0
+     INVOKESPECIAL java/lang/Object.<init> ()V
+     ALOAD 0
+-    INVOKESTATIC T$class.$init$ (LT;)V
++    INVOKESTATIC T.$init$ (LT;)V
+     RETURN
+     MAXSTACK = 1
+     MAXLOCALS = 1
+@@ -16,7 +16,7 @@
+   // access flags 0x1
+   public foo()I
+     ALOAD 0
+-    INVOKESTATIC T$class.foo (LT;)I
++    INVOKESTATIC T.foo$ (LT;)I
+     IRETURN
+     MAXSTACK = 1
+     MAXLOCALS = 1
+diff --git a/T.class.asm b/T.class.asm
+index 9180093..fcac19f 100644
+--- a/T.class.asm
++++ b/T.class.asm
+@@ -1,8 +1,28 @@
+-// class version 50.0 (50)
++// class version 52.0 (52)
+ // access flags 0x601
+ public abstract interface T {
+ 
+ 
+-  // access flags 0x401
+-  public abstract foo()I
++  // access flags 0x9
++  public static $init$(LT;)V
++    // parameter final synthetic  $this
++    RETURN
++    MAXSTACK = 0
++    MAXLOCALS = 1
++
++  // access flags 0x1
++  public default foo()I
++    ICONST_4
++    IRETURN
++    MAXSTACK = 1
++    MAXLOCALS = 1
++
++  // access flags 0x1009
++  public static synthetic foo$(LT;)I
++    // parameter final synthetic  $this
++    ALOAD 0
++    INVOKESPECIAL T.foo ()I
++    IRETURN
++    MAXSTACK = 1
++    MAXLOCALS = 1
+ }
+```
+
+### Scala standard library changes during 2.11 minor releases
+
+```
+% jardiff --quiet --git /tmp/scala-library-diff /Users/jz/scala/2.11.*/lib/scala-library.jar
+
+```
+
+Browsable Repo: [scala-library-diff](https://github.com/retronym/scala-library-diff/commits/master)
