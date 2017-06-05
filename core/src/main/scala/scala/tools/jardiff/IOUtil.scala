@@ -14,16 +14,20 @@ object IOUtil {
   def rootPath(fileOrZip: Path): Path = {
     if (fileOrZip.getFileName.toString.endsWith(".jar")) {
       val uri = URI.create("jar:file:" + fileOrZip.toUri.getPath)
-      FileSystems.newFileSystem(uri, new util.HashMap[String, Any]()).getPath("/")
+      newFileSystem(uri, new util.HashMap[String, Any]()).getPath("/")
     } else fileOrZip
   }
+
+  private def newFileSystem(uri: URI, map: java.util.Map[String, Any]) =
+    try FileSystems.newFileSystem(uri, map)
+    catch { case _: FileSystemAlreadyExistsException => FileSystems.getFileSystem(uri) }
 
   def mapRecursive(source: java.nio.file.Path, target: java.nio.file.Path)(f: (Path, Path) => Unit) = {
     Files.walkFileTree(source, util.EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, new FileVisitor[Path] {
       def preVisitDirectory(dir: Path, sourceBasic: BasicFileAttributes): FileVisitResult = {
         val relative = source.relativize(dir).toString
-        if (!Files.exists(target.getFileSystem.getPath(relative)))
-          Files.createDirectory(target.getFileSystem.getPath(relative))
+        if (!Files.exists(target.resolve(relative)))
+          Files.createDirectory(target.resolve(relative))
         FileVisitResult.CONTINUE
       }
 
