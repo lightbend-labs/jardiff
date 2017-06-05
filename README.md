@@ -31,13 +31,16 @@ After cloning this project. and use `sbt clean core/assembly`.
 % function jardiff() {   java $JAVA_OPTS -jar /code/jardiff/core/target/scala-2.12/jardiff-core-assembly-*.jar "$@"; }
 
 % jardiff -h
-  usage: jardiff [-c] [-g <dir>] [-h] [-q] [-U <n>] <jar/directory/url> [<jar/directory/url> ...]
-   -c,--suppress-code   Suppress method bodies
-   -g,--git <dir>       Directory to output a git repository containing the diff
-   -h,--help            Display this message
-   -q,--quiet           Don't output diffs to standard out
-   -U,--unified <n>     Number of context lines in diff
+usage: jardiff [-c] [-g <dir>] [-h] [-q] [-U <n>] VERSION1 [VERSION2 ...]
 
+Each VERSION may designate a single file, a directory, JAR file or a
+`:`-delimited classpath
+
+ -c,--suppress-code   Suppress method bodies
+ -g,--git <dir>       Directory to output a git repository containing the diff
+ -h,--help            Display this message
+ -q,--quiet           Don't output diffs to standard out
+ -U,--unified <n>     Number of context lines in diff
 
 % jardiff dir1 dir2
 
