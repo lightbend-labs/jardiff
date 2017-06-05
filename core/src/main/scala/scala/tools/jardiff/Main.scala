@@ -20,7 +20,7 @@ object Main {
     run(args) match {
       case ShowUsage(msg) => System.err.println(msg); sys.exit(-1)
       case Error(err) => err.printStackTrace(System.err); sys.exit(-1)
-      case Success =>
+      case Success(diffFound) => sys.exit(if (diffFound) 1 else 0)
     }
   }
 
@@ -72,10 +72,8 @@ object Main {
           case Nil => ShowUsage(helpText)
           case _ =>
             val jarDiff = JarDiff(paths, config)
-            jarDiff.diff()
-            Success
-
-
+            val diffFound = jarDiff.diff()
+            Success(diffFound)
         }
       }
     } catch {
@@ -88,4 +86,4 @@ object Main {
 sealed abstract class RunResult
 case class ShowUsage(msg: String) extends RunResult
 case class Error(err: Throwable) extends RunResult
-object Success extends RunResult
+case class Success(diffFound: Boolean) extends RunResult
