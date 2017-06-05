@@ -4,7 +4,7 @@
 
 package scala.tools.jardiff
 
-import java.io.OutputStream
+import java.io.{File, OutputStream}
 import java.nio.file._
 
 import org.eclipse.jgit.api.Git
@@ -14,7 +14,7 @@ import org.eclipse.jgit.treewalk.EmptyTreeIterator
 
 import scala.tools.jardiff.JGitUtil._
 
-final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: String => List[FileRenderer]) {
+final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: String => List[FileRenderer]) {
   private val targetBase = config.gitRepo.getOrElse(Files.createTempDirectory("jardiff-"))
 
   def diff(): Boolean = {
@@ -23,17 +23,19 @@ final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: String
     val git: Git =
       Git.init.setDirectory(targetBase.toFile).call
 
-    def renderAndCommit(f: Path): RevCommit = {
+    def renderAndCommit(fs: List[Path]): RevCommit = {
       git.rm().setCached(true).addFilepattern(".")
 
-      val root = IOUtil.rootPath(f)
-      if (Files.isDirectory(root))
-        renderFiles(root)
-      else
-        renderFile(f.getParent)(f, targetBase.resolve(f.getFileName))
+      for (f <- fs) {
+        val root = IOUtil.rootPath(f)
+        if (Files.isDirectory(root))
+          renderFiles(root)
+        else
+          renderFile(f.getParent)(f, targetBase.resolve(f.getFileName))
+      }
 
       git.add().addFilepattern(".").call()
-      git.commit().setMessage("jardiff textified output of: " + f).call()
+      git.commit().setMessage("jardiff textified output of: " + fs.mkString(File.pathSeparator)).call()
     }
     files match {
       case head :: Nil =>
@@ -91,7 +93,14 @@ final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: String
 }
 
 object JarDiff {
-  def apply(files: List[Path], config: JarDiff.Config) = {
+  def expandClassPath(f: String) = {
+    val path = Paths.get(f)
+    if (Files.exists(path)) List(path)
+    else if (f.indexOf(java.io.File.pathSeparatorChar) != -1)
+      f.split(java.io.File.pathSeparatorChar).toList.map(s => Paths.get(s))
+    else List(path)
+  }
+  def apply(files: List[List[Path]], config: JarDiff.Config): JarDiff = {
     val renderers = Map("class" -> List(new AsmTextifyRenderer(config.code), new ScalapRenderer())).withDefault(_ => List(IdentityRenderer))
     new JarDiff(files, config, renderers)
   }

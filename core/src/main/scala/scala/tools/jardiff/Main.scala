@@ -4,7 +4,7 @@
 
 package scala.tools.jardiff
 
-import java.io.{ByteArrayOutputStream, PrintWriter}
+import java.io.{ByteArrayOutputStream, File, PrintWriter}
 import java.nio.file._
 
 import org.apache.commons.cli
@@ -47,9 +47,11 @@ object Main {
     val baos = new ByteArrayOutputStream()
     val writer = new PrintWriter(baos)
     try {
-      formatter.printHelp(writer, 80, "jardiff", "", Opts(), HelpFormatter.DEFAULT_LEFT_PAD, HelpFormatter.DEFAULT_DESC_PAD, "", true)
+      val footer = s" VERSION1 [VERSION2 ...]\n\nEach VERSION may designate a single file, a directory, JAR file or a `${File.pathSeparator}`-delimited classpath\n\n"
+      formatter.printHelp(writer, 80, "jardiff", footer, Opts(), HelpFormatter.DEFAULT_LEFT_PAD, HelpFormatter.DEFAULT_DESC_PAD, "", true)
       writer.flush()
-      baos.toString().replaceFirst("\n", " <jar/directory/url> [<jar/directory/url> ...]\n")
+      baos.toString().replaceFirst("\\n", "")
+
     } finally {
       writer.close()
     }
@@ -67,7 +69,7 @@ object Main {
         val gitRepo = if (line.has(Opts.Git)) Some(Paths.get(line.get(Opts.Git))) else None
         val diffOutputStream = if (line.has(Opts.Quiet)) NullOutputStream.INSTANCE else System.out
         val config = JarDiff.Config(gitRepo, !line.has(Opts.NoCode), line.getOptInt(Opts.ContextLines), diffOutputStream)
-        val paths = trailingArgs.asScala.map(Paths.get(_)).toList
+        val paths = trailingArgs.asScala.toList.map(JarDiff.expandClassPath)
         paths match {
           case Nil => ShowUsage(helpText)
           case _ =>
