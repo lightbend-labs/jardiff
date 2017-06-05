@@ -14,10 +14,11 @@ import org.eclipse.jgit.treewalk.EmptyTreeIterator
 
 import scala.tools.jardiff.JGitUtil._
 
-final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: Map[String, List[FileRenderer]]) {
+final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: String => List[FileRenderer]) {
   private val targetBase = config.gitRepo.getOrElse(Files.createTempDirectory("jardiff-"))
 
-  def diff(): Unit = {
+  def diff(): Boolean = {
+    var differenceFound = false
     import org.eclipse.jgit.api.Git
     val git: Git =
       Git.init.setDirectory(targetBase.toFile).call
@@ -42,16 +43,18 @@ final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: Map[St
         val commits = files.iterator.map(renderAndCommit)
         commits.sliding(2).foreach {
           case Seq(commit1, commit2) =>
-            printDiff(git, commit1, commit2)
+            differenceFound ||= printDiff(git, commit1, commit2)
         }
     }
 
 
     if (config.gitRepo.isEmpty)
       IOUtil.deleteRecursive(targetBase)
+
+    differenceFound
   }
 
-  private def printDiff(git: Git, commit1: RevCommit, commit2: RevCommit): Unit = {
+  private def printDiff(git: Git, commit1: RevCommit, commit2: RevCommit): Boolean = {
     val cmd = git.diff()
     val diffFormatter = new DiffFormatter(config.diffOutputStream)
     config.contextLines.foreach{lines => cmd.setContextLines(lines); diffFormatter.setContext(lines)}
@@ -60,6 +63,7 @@ final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: Map[St
     val diffEntries = cmd.call()
     diffFormatter.setRepository(git.getRepository)
     diffFormatter.format(diffEntries)
+    diffEntries.size() > 0
   }
   private def printInitialDiff(git: Git, initialCommit: RevCommit): Unit = {
     val cmd = git.diff()
@@ -79,7 +83,7 @@ final class JarDiff(files: List[Path], config: JarDiff.Config, renderers: Map[St
   private def renderFile(sourceBase: Path)(sourceFile: Path, targetFile: Path) = {
     val ix = sourceFile.getFileName.toString.lastIndexOf(".")
     val extension = if (ix >= 0) sourceFile.getFileName.toString.substring(ix + 1) else ""
-    for (renderer <- renderers.getOrElse(extension, Nil)) {
+    for (renderer <- renderers(extension)) { // not getOrElse(Nil), we want to respect the default value of the map
       val outPath = targetFile.resolveSibling(targetFile.getFileName + renderer.outFileExtension)
       renderer.render(sourceFile, outPath)
     }
