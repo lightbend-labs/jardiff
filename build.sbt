@@ -16,7 +16,7 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq (
       else None
     },
     git.useGitDescribe := true,
-    licenses := Seq("Apache License v2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    licenses := List(("Scala license", "https://github.com/scala/jardiff/blob/master/LICENSE")),
     homepage := Some(url("http://github.com/scala/jardiff")),
     scalacOptions := Seq("-feature", "-deprecation", "-Xlint")
 )
