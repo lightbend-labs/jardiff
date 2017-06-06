@@ -16,20 +16,18 @@ The diffs between these are rendered to standard out (unless `--quiet` is provid
 argument is provided, the initial commit is rendered.
 
 By default, a temporary git repository is used and deleted on exit. Use `--git` to provide a custom
-location for the repository that can be inspected after the tool has run.   
+location for the repository that can be inspected after the tool has run.
 
-Building and Running
---------------------
+Installing
+----------
 
-After cloning this project, use `sbt clean core/assembly`.
+ - Download `jardiff.jar` from https://github.com/scala/jardiff/releases/latest
 
 ```
-% cd /code/jardiff
-
-% sbt clean core/assembly
+% java -jar ~/Downloads/jardiff.jar ...
 
 % function jardiff() {
-    java $JAVA_OPTS -jar /code/jardiff/core/target/scala-2.12/jardiff-core-assembly-*.jar "$@";
+    java -jar ~/Downloads/jardiff.jar "$@";
 }
 
 % jardiff -h
@@ -51,7 +49,10 @@ Each VERSION may designate a single file, a directory, JAR file or a
 % jardiff --git-repo /tmp/diff-repo --quiet v1.jar v2.jar v3.jar
 ```
 
-We plan to publish a binary release soon to make this more convenient.
+Building
+--------
+
+After cloning this project, use `sbt clean core/assembly`.
 
 Sample Output
 -------------
