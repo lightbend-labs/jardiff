@@ -31,7 +31,7 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
         if (Files.isDirectory(root))
           renderFiles(root)
         else
-          renderFile(f.getParent)(f, targetBase.resolve(f.getFileName))
+          renderFile(root, targetBase.resolve(f.getFileName))
       }
 
       git.add().addFilepattern(".").call()
@@ -84,10 +84,10 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
   }
 
   private def renderFiles(sourceBase: java.nio.file.Path) = {
-    IOUtil.mapRecursive(sourceBase, targetBase)(renderFile(sourceBase))
+    IOUtil.mapRecursive(sourceBase, targetBase)(renderFile)
   }
 
-  private def renderFile(sourceBase: Path)(sourceFile: Path, targetFile: Path) = {
+  private def renderFile(sourceFile: Path, targetFile: Path) = {
     val ix = sourceFile.getFileName.toString.lastIndexOf(".")
     val extension = if (ix >= 0) sourceFile.getFileName.toString.substring(ix + 1) else ""
     if (!Files.isSymbolicLink(sourceFile)) {
