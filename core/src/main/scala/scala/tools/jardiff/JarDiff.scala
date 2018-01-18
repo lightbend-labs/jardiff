@@ -6,11 +6,11 @@ package scala.tools.jardiff
 
 import java.io.{File, OutputStream}
 import java.nio.file._
+import java.nio.file.attribute.BasicFileAttributes
 
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffFormatter
 import org.eclipse.jgit.revwalk.RevCommit
-import org.eclipse.jgit.treewalk.EmptyTreeIterator
 
 import scala.tools.jardiff.JGitUtil._
 
@@ -68,14 +68,19 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
     diffEntries.size() > 0
   }
   private def printInitialDiff(git: Git, initialCommit: RevCommit): Unit = {
-    val cmd = git.diff()
-    val diffFormatter = new DiffFormatter(config.diffOutputStream)
-    config.contextLines.foreach{lines => cmd.setContextLines(lines); diffFormatter.setContext(lines)}
-    cmd.setOldTree(new EmptyTreeIterator())
-    cmd.setNewTree(getCanonicalTreeParser(git, initialCommit))
-    val diffEntries = cmd.call()
-    diffFormatter.setRepository(git.getRepository)
-    diffFormatter.format(diffEntries)
+    class PrintingWalker extends SimpleFileVisitor[Path] {
+
+      override def preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult =
+        if (dir.getFileName.toString == ".git") FileVisitResult.SKIP_SUBTREE else super.preVisitDirectory(dir, attrs)
+
+      override def visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult = {
+        config.diffOutputStream.write(("\n+++ " + targetBase.relativize(file).toString + "\n").getBytes)
+        config.diffOutputStream.write(Files.readAllBytes(file))
+        super.visitFile(file, attrs)
+      }
+    }
+
+    Files.walkFileTree(targetBase, new PrintingWalker)
   }
 
   private def renderFiles(sourceBase: java.nio.file.Path) = {
