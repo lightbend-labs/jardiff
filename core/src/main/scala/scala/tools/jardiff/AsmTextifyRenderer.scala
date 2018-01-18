@@ -8,11 +8,11 @@ import java.io.PrintWriter
 import java.nio.file.{Files, Path}
 
 import scala.collection.JavaConverters._
-import scala.tools.asm.ClassReader
-import scala.tools.asm.tree.ClassNode
+import scala.tools.asm.{ClassReader, Opcodes}
+import scala.tools.asm.tree.{ClassNode, FieldNode, InnerClassNode, MethodNode}
 import scala.tools.asm.util.TraceClassVisitor
 
-class AsmTextifyRenderer(code: Boolean, raw: Boolean) extends FileRenderer {
+class AsmTextifyRenderer(code: Boolean, raw: Boolean, privates: Boolean) extends FileRenderer {
   def outFileExtension: String = ".asm"
   override def render(in: Path, out: Path): Unit = {
     val classBytes = Files.readAllBytes(in)
@@ -20,6 +20,11 @@ class AsmTextifyRenderer(code: Boolean, raw: Boolean) extends FileRenderer {
     val node = if (raw) rawNode else zapScalaClassAttrs(sortClassMembers(rawNode))
     if (!code)
       node.methods.forEach(_.instructions.clear())
+    if (!privates) {
+      node.methods.removeIf((m: MethodNode) => isPrivate(m.access))
+      node.fields.removeIf((m: FieldNode) => isPrivate(m.access))
+      node.innerClasses.removeIf((m: InnerClassNode) => isPrivate(m.access))
+    }
     Files.createDirectories(out.getParent)
     val pw = new PrintWriter(Files.newBufferedWriter(out))
     try {
@@ -28,6 +33,11 @@ class AsmTextifyRenderer(code: Boolean, raw: Boolean) extends FileRenderer {
     } finally {
       pw.close()
     }
+  }
+
+  private def isPrivate(access: Int): Boolean = {
+    (access & Opcodes.ACC_PRIVATE) != 0
+
   }
 
   def sortClassMembers(node: ClassNode): node.type = {

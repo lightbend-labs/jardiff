@@ -30,11 +30,12 @@ object Main {
     Git.setArgName("dir")
     val NoCode = new cli.Option("c", "suppress-code", false, "Suppress method bodies")
     val Raw = new cli.Option("r", "raw", false, "Disable sorting and filtering of classfile contents")
+    val NoPrivates = new cli.Option("p", "suppress-privates", false, "Display only non-private members")
     val ContextLines = new cli.Option("U", "unified", true, "Number of context lines in diff")
     val Quiet = new cli.Option("q", "quiet", false, "Don't output diffs to standard out")
     ContextLines.setArgName("n")
     def apply(): Options = {
-      new cli.Options().addOption(Help).addOption(Git).addOption(ContextLines).addOption(NoCode).addOption(Raw).addOption(Quiet)
+      new cli.Options().addOption(Help).addOption(Git).addOption(ContextLines).addOption(NoCode).addOption(Raw).addOption(NoPrivates).addOption(Quiet)
     }
   }
   private implicit class RichCommandLine(val self: CommandLine) {
@@ -69,7 +70,7 @@ object Main {
       } else {
         val gitRepo = if (line.has(Opts.Git)) Some(Paths.get(line.get(Opts.Git))) else None
         val diffOutputStream = if (line.has(Opts.Quiet)) NullOutputStream.INSTANCE else System.out
-        val config = JarDiff.Config(gitRepo, !line.has(Opts.NoCode), line.has(Opts.Raw), line.getOptInt(Opts.ContextLines), diffOutputStream)
+        val config = JarDiff.Config(gitRepo, !line.has(Opts.NoCode), line.has(Opts.Raw), !line.has(Opts.NoPrivates), line.getOptInt(Opts.ContextLines), diffOutputStream)
         val paths = trailingArgs.asScala.toList.map(JarDiff.expandClassPath)
         paths match {
           case Nil => ShowUsage(helpText)

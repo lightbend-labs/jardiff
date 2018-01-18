@@ -108,10 +108,10 @@ object JarDiff {
     else List(path)
   }
   def apply(files: List[List[Path]], config: JarDiff.Config): JarDiff = {
-    val renderers = Map("class" -> List(new AsmTextifyRenderer(config.code, config.raw), new ScalapRenderer())).withDefault(_ => List(IdentityRenderer))
+    val renderers = Map("class" -> List(new AsmTextifyRenderer(config.code, config.raw, config.privates), new ScalapRenderer())).withDefault(_ => List(IdentityRenderer))
     new JarDiff(files, config, renderers)
   }
 
-  case class Config(gitRepo: Option[Path], code: Boolean, raw: Boolean, contextLines: Option[Int], diffOutputStream: OutputStream)
+  case class Config(gitRepo: Option[Path], code: Boolean, raw: Boolean, privates: Boolean, contextLines: Option[Int], diffOutputStream: OutputStream)
 
 }
