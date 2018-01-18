@@ -15,7 +15,18 @@ object IOUtil {
     if (fileOrZip.getFileName.toString.endsWith(".jar")) {
       val uri = URI.create("jar:file:" + fileOrZip.toUri.getPath)
       newFileSystem(uri, new util.HashMap[String, Any]()).getPath("/")
-    } else fileOrZip
+    } else {
+      val extSlash = ".jar/"
+      val index = fileOrZip.toString.indexOf(extSlash)
+      if (index == -1) {
+        fileOrZip
+      } else {
+        val uri = URI.create("jar:file:" + Paths.get(fileOrZip.toString.substring(0, index + extSlash.length - 1)).toUri.getPath)
+        val jarEntry = fileOrZip.toString.substring(index + extSlash.length - 1)
+        val system = newFileSystem(uri, new util.HashMap[String, Any]())
+        system.getPath(jarEntry)
+      }
+    }
   }
 
   private def newFileSystem(uri: URI, map: java.util.Map[String, Any]) =
