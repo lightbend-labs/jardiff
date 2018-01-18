@@ -12,11 +12,12 @@ import scala.tools.asm.ClassReader
 import scala.tools.asm.tree.ClassNode
 import scala.tools.asm.util.TraceClassVisitor
 
-class AsmTextifyRenderer(code: Boolean) extends FileRenderer {
+class AsmTextifyRenderer(code: Boolean, raw: Boolean) extends FileRenderer {
   def outFileExtension: String = ".asm"
   override def render(in: Path, out: Path): Unit = {
     val classBytes = Files.readAllBytes(in)
-    val node = zapScalaClassAttrs(sortClassMembers(classFromBytes(classBytes)))
+    val rawNode = classFromBytes(classBytes)
+    val node = if (raw) rawNode else zapScalaClassAttrs(sortClassMembers(rawNode))
     if (!code)
       node.methods.forEach(_.instructions.clear())
     Files.createDirectories(out.getParent)
@@ -49,7 +50,7 @@ class AsmTextifyRenderer(code: Boolean) extends FileRenderer {
 
   private def classFromBytes(bytes: Array[Byte]): ClassNode = {
     val node = new ClassNode()
-    new ClassReader(bytes).accept(node, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES)
+    new ClassReader(bytes).accept(node, if (raw) 0 else ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES)
 
     node
   }

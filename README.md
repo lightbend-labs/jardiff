@@ -40,6 +40,7 @@ Each VERSION may designate a single file, a directory, JAR file or a
  -g,--git <dir>       Directory to output a git repository containing the diff
  -h,--help            Display this message
  -q,--quiet           Don't output diffs to standard out
+ -r,--raw             Disable sorting and filtering of classfile contents
  -U,--unified <n>     Number of context lines in diff
 
 % jardiff dir1 dir2
