@@ -21,7 +21,7 @@ object IOUtil {
       if (index == -1) {
         fileOrZip
       } else {
-        val uri = URI.create("jar:file:" + Paths.get(fileOrZip.toString.substring(0, index + extSlash.length - 1)).toUri.getPath)
+        val uri = URI.create("jar:" + Paths.get(fileOrZip.toString.substring(0, index + extSlash.length - 1)).toUri.toString)
         val jarEntry = fileOrZip.toString.substring(index + extSlash.length - 1)
         val system = newFileSystem(uri, new util.HashMap[String, Any]())
         system.getPath(jarEntry)
