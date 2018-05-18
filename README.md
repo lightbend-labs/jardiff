@@ -47,7 +47,7 @@ Each VERSION may designate a single file, a directory, JAR file or a
 
 % jardiff v1/A.class v2/A.class
 
-% jardiff --git-repo /tmp/diff-repo --quiet v1.jar v2.jar v3.jar
+% jardiff --git /tmp/diff-repo --quiet v1.jar v2.jar v3.jar
 ```
 
 Building
