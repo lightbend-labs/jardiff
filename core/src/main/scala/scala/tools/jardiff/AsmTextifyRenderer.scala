@@ -8,9 +8,9 @@ import java.io.PrintWriter
 import java.nio.file.{Files, Path}
 
 import scala.collection.JavaConverters._
-import scala.tools.asm.{ClassReader, Opcodes}
-import scala.tools.asm.tree.{ClassNode, FieldNode, InnerClassNode, MethodNode}
-import scala.tools.asm.util.TraceClassVisitor
+import org.objectweb.asm.{ClassReader, Opcodes}
+import org.objectweb.asm.tree.{ClassNode, FieldNode, InnerClassNode, MethodNode}
+import org.objectweb.asm.util.TraceClassVisitor
 
 class AsmTextifyRenderer(code: Boolean, raw: Boolean, privates: Boolean) extends FileRenderer {
   def outFileExtension: String = ".asm"
