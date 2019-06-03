@@ -3,7 +3,7 @@ val buildName = "jardiff"
 inThisBuild(Seq[Setting[_]](
   version := "1.0-SNAPSHOT",
   organization := "org.scala-lang",
-  scalaVersion := "2.12.6",
+  scalaVersion := "2.12.8",
   licenses := List(("Scala license", url("https://github.com/scala/jardiff/blob/master/LICENSE"))),
   homepage := Some(url("http://github.com/scala/jardiff")),
   scalacOptions := Seq("-feature", "-deprecation", "-Xlint")
@@ -55,9 +55,9 @@ lazy val core = (
       "org.ow2.asm" % "asm" % AsmVersion,
       "org.ow2.asm" % "asm-util" % AsmVersion,
       "org.scala-lang" % "scalap" % System.getProperty("scalap.version", scalaVersion.value),
-      "org.eclipse.jgit" % "org.eclipse.jgit" % "4.6.0.201612231935-r",
-      "org.slf4j" % "slf4j-api" % "1.7.25",
-      "org.slf4j" % "log4j-over-slf4j" % "1.7.25", // for any java classes looking for this
+      "org.eclipse.jgit" % "org.eclipse.jgit" % "5.3.1.201904271842-r",
+      "org.slf4j" % "slf4j-api" % "1.7.26",
+      "org.slf4j" % "log4j-over-slf4j" % "1.7.26", // for any java classes looking for this
       "ch.qos.logback" % "logback-classic" % "1.2.3"
     ),
     name := buildName + "-core",
