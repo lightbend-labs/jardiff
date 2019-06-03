@@ -52,8 +52,8 @@ lazy val core = (
     scalaVersion := "2.13.0-M4",
     libraryDependencies ++= Seq(
       "commons-cli" % "commons-cli" % "1.4",
-      "org.ow2.asm" % "asm" % "6.2",
-      "org.ow2.asm" % "asm-util" % "6.2",
+      "org.ow2.asm" % "asm" % AsmVersion,
+      "org.ow2.asm" % "asm-util" % AsmVersion,
       "org.scala-lang" % "scalap" % System.getProperty("scalap.version", scalaVersion.value),
       "org.eclipse.jgit" % "org.eclipse.jgit" % "4.6.0.201612231935-r",
       "org.slf4j" % "slf4j-api" % "1.7.25",
@@ -69,3 +69,4 @@ lazy val core = (
   ).settings(sonatypePublishSettings:_*)
 )
 
+val AsmVersion = "7.1"
