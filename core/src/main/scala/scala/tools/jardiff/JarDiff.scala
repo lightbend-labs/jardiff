@@ -24,7 +24,7 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
       Git.init.setDirectory(targetBase.toFile).call
 
     def renderAndCommit(fs: List[Path]): RevCommit = {
-      git.rm().setCached(true).addFilepattern(".")
+      IOUtil.deleteRecursive(targetBase)
 
       for (f <- fs) {
         val root = IOUtil.rootPath(f)
@@ -35,7 +35,7 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
       }
 
       git.add().addFilepattern(".").call()
-      git.commit().setMessage("jardiff textified output of: " + fs.mkString(File.pathSeparator)).call()
+      git.commit().setAllowEmpty(true).setAll(true).setMessage("jardiff textified output of: " + fs.mkString(File.pathSeparator)).call()
     }
     files match {
       case head :: Nil =>
