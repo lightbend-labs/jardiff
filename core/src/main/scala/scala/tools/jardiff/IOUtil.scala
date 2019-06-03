@@ -67,8 +67,19 @@ object IOUtil {
         FileVisitResult.CONTINUE
       }
 
+      override def preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult = {
+        if (dir.getFileName.toString == ".git")
+          FileVisitResult.SKIP_SUBTREE
+        else super.preVisitDirectory(dir, attrs)
+      }
       override def postVisitDirectory(dir: Path, exc: IOException): FileVisitResult = {
-        Files.delete(dir)
+        val listing = Files.list(dir)
+        try {
+          if (!listing.iterator().hasNext)
+            Files.delete(dir)
+        } finally {
+          listing.close()
+        }
         FileVisitResult.CONTINUE
       }
     })
