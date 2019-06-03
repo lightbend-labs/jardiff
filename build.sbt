@@ -49,7 +49,7 @@ lazy val root = (
 lazy val core = (
   project.
   settings(
-    scalaVersion := "2.13.0-M4",
+    scalaVersion := "2.13.0-RC2",
     libraryDependencies ++= Seq(
       "commons-cli" % "commons-cli" % "1.4",
       "org.ow2.asm" % "asm" % AsmVersion,
