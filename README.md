@@ -31,17 +31,21 @@ Installing
 }
 
 % jardiff -h
-usage: jardiff [-c] [-g <dir>] [-h] [-q] [-U <n>] VERSION1 [VERSION2 ...]
+usage: jardiff [-c] [-g <dir>] [-h] [-i <arg>] [-p] [-q] [-r] [-U <n>] VERSION1 [VERSION2 ...]
 
 Each VERSION may designate a single file, a directory, JAR file or a
 `:`-delimited classpath
 
- -c,--suppress-code   Suppress method bodies
- -g,--git <dir>       Directory to output a git repository containing the diff
- -h,--help            Display this message
- -q,--quiet           Don't output diffs to standard out
- -r,--raw             Disable sorting and filtering of classfile contents
- -U,--unified <n>     Number of context lines in diff
+ -c,--suppress-code       Suppress method bodies
+ -g,--git <dir>           Directory to output a git repository containing the
+                          diff
+ -h,--help                Display this message
+ -i,--ignore <arg>        File pattern to ignore rendered files in gitignore
+                          format
+ -p,--suppress-privates   Display only non-private members
+ -q,--quiet               Don't output diffs to standard out
+ -r,--raw                 Disable sorting and filtering of classfile contents
+ -U,--unified <n>         Number of context lines in diff
 
 % jardiff dir1 dir2
 
