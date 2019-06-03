@@ -13,6 +13,7 @@ import org.eclipse.jgit.diff.DiffFormatter
 import org.eclipse.jgit.revwalk.RevCommit
 
 import scala.tools.jardiff.JGitUtil._
+import scala.collection.JavaConverters._
 
 final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: String => List[FileRenderer]) {
   private val targetBase = config.gitRepo.getOrElse(Files.createTempDirectory("jardiff-"))
@@ -20,8 +21,13 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
   def diff(): Boolean = {
     var differenceFound = false
     import org.eclipse.jgit.api.Git
-    val git: Git =
-      Git.init.setDirectory(targetBase.toFile).call
+    val git: Git = {
+      Git.init.setDirectory(targetBase.toFile).call()
+    }
+
+    val excluded = targetBase.resolve(".git").resolve("info").resolve("exclude")
+    Files.createDirectories(excluded.getParent)
+    Files.write(excluded, config.ignore.asJava)
 
     def renderAndCommit(fs: List[Path]): RevCommit = {
       IOUtil.deleteRecursive(targetBase)
@@ -33,7 +39,9 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
         else
           renderFile(root, targetBase.resolve(f.getFileName))
       }
-
+      val status = git.status().call()
+      val ignored = status.getIgnoredNotInIndex
+      ignored.forEach(p => IOUtil.deleteRecursive(targetBase.resolve(p)))
       git.add().addFilepattern(".").call()
       git.commit().setAllowEmpty(true).setAll(true).setMessage("jardiff textified output of: " + fs.mkString(File.pathSeparator)).call()
     }
@@ -112,6 +120,6 @@ object JarDiff {
     new JarDiff(files, config, renderers)
   }
 
-  case class Config(gitRepo: Option[Path], code: Boolean, raw: Boolean, privates: Boolean, contextLines: Option[Int], diffOutputStream: OutputStream)
+  case class Config(gitRepo: Option[Path], code: Boolean, raw: Boolean, privates: Boolean, contextLines: Option[Int], diffOutputStream: OutputStream, ignore: List[String])
 
 }
