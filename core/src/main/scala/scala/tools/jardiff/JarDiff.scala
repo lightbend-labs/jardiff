@@ -10,6 +10,7 @@ import java.nio.file.attribute.BasicFileAttributes
 
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffFormatter
+import org.eclipse.jgit.lib.RepositoryCache
 import org.eclipse.jgit.revwalk.RevCommit
 
 import scala.tools.jardiff.JGitUtil._
@@ -21,45 +22,46 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
   def diff(): Boolean = {
     var differenceFound = false
     import org.eclipse.jgit.api.Git
-    val git: Git = {
-      Git.init.setDirectory(targetBase.toFile).call()
-    }
+    val git: Git = Git.init.setDirectory(targetBase.toFile).call()
+    try {
+      val excluded = targetBase.resolve(".git").resolve("info").resolve("exclude")
+      Files.createDirectories(excluded.getParent)
+      Files.write(excluded, config.ignore.asJava)
 
-    val excluded = targetBase.resolve(".git").resolve("info").resolve("exclude")
-    Files.createDirectories(excluded.getParent)
-    Files.write(excluded, config.ignore.asJava)
+      def renderAndCommit(fs: List[Path]): RevCommit = {
+        IOUtil.deleteRecursive(targetBase)
 
-    def renderAndCommit(fs: List[Path]): RevCommit = {
-      IOUtil.deleteRecursive(targetBase)
-
-      for (f <- fs) {
-        val root = IOUtil.rootPath(f)
-        if (Files.isDirectory(root))
-          renderFiles(root)
-        else
-          renderFile(root, targetBase.resolve(f.getFileName))
-      }
-      val status = git.status().call()
-      val ignored = status.getIgnoredNotInIndex
-      ignored.forEach(p => IOUtil.deleteRecursive(targetBase.resolve(p)))
-      git.add().addFilepattern(".").call()
-      git.commit().setAllowEmpty(true).setAll(true).setMessage("jardiff textified output of: " + fs.mkString(File.pathSeparator)).call()
-    }
-    files match {
-      case head :: Nil =>
-        val commit = renderAndCommit(head)
-        printInitialDiff(git, commit)
-      case _ =>
-        val commits = files.iterator.map(renderAndCommit)
-        commits.sliding(2).foreach {
-          case Seq(commit1, commit2) =>
-            differenceFound ||= printDiff(git, commit1, commit2)
+        for (f <- fs) {
+          val root = IOUtil.rootPath(f)
+          if (Files.isDirectory(root))
+            renderFiles(root)
+          else
+            renderFile(root, targetBase.resolve(f.getFileName))
         }
+        val status = git.status().call()
+        val ignored = status.getIgnoredNotInIndex
+        ignored.forEach(p => IOUtil.deleteRecursive(targetBase.resolve(p)))
+        git.add().addFilepattern(".").call()
+        git.commit().setAllowEmpty(true).setAll(true).setMessage("jardiff textified output of: " + fs.mkString(File.pathSeparator)).call()
+      }
+
+      files match {
+        case head :: Nil =>
+          val commit = renderAndCommit(head)
+          printInitialDiff(git, commit)
+        case _ =>
+          val commits = files.iterator.map(renderAndCommit)
+          commits.sliding(2).foreach {
+            case Seq(commit1, commit2) =>
+              differenceFound ||= printDiff(git, commit1, commit2)
+          }
+      }
+    } finally {
+      git.getRepository.close()
+      RepositoryCache.clear()
+      if (config.gitRepo.isEmpty)
+        IOUtil.deleteRecursive(targetBase)
     }
-
-
-    if (config.gitRepo.isEmpty)
-      IOUtil.deleteRecursive(targetBase)
 
     differenceFound
   }
