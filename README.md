@@ -21,15 +21,23 @@ location for the repository that can be inspected after the tool has run.
 Installing
 ----------
 
- - Download `jardiff.jar` from https://github.com/scala/jardiff/releases/latest
+### OSX
+
+OSX users may install with:
 
 ```
-% java -jar ~/Downloads/jardiff.jar ...
+brew tap retronym/homebrew-formulas; brew install jardiff
+```
 
-% function jardiff() {
-    java -jar ~/Downloads/jardiff.jar "$@";
-}
+### Other Platforms
 
+ - Download `jardiff.jar` from https://github.com/scala/jardiff/releases/latest
+ - Wrap in a shell function or script to run `java -jar jardiff.jar "$@"`
+
+Usage
+----------
+
+```
 % jardiff -h
 usage: jardiff [-c] [-g <dir>] [-h] [-q] [-U <n>] VERSION1 [VERSION2 ...]
 
