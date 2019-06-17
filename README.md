@@ -21,12 +21,12 @@ location for the repository that can be inspected after the tool has run.
 Installing
 ----------
 
-### OSX
+### macOS
 
-OSX users may install with:
+`macOS` users may install with:
 
 ```
-brew tap retronym/homebrew-formulas; brew install jardiff
+brew install retronym/formulas/jardiff
 ```
 
 ### Other Platforms
