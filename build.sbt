@@ -3,53 +3,28 @@ val buildName = "jardiff"
 inThisBuild(Seq[Setting[_]](
   version := "1.0-SNAPSHOT",
   organization := "org.scala-lang",
-  scalaVersion := "2.12.8",
+  scalaVersion := "2.13.0",
   licenses := List(("Scala license", url("https://github.com/scala/jardiff/blob/master/LICENSE"))),
   homepage := Some(url("http://github.com/scala/jardiff")),
+  scmInfo := Some(ScmInfo(url("https://github.com/scala/jardiff"), "scm:git:git@github.com:scala/jardiff.git")),
+  developers := List(
+    Developer("retronym", "Jason Zaugg", "@retronym", url("https://github.com/retronym")),
+  ),
   scalacOptions := Seq("-feature", "-deprecation", "-Xlint")
 ))
-
-def sonatypePublishSettings: Seq[Def.Setting[_]] = Seq(
-  // If we want on maven central, we need to be in maven style.
-  publishMavenStyle := true,
-  publishArtifact in Test := false,
-  // The Nexus repo we're publishing to.
-  publishTo := Some(
-    if (isSnapshot.value) "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
-    else                  "releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-  ),
-  // Maven central cannot allow other repos.  We're ok here because the artifacts we
-  // we use externally are *optional* dependencies.
-  pomIncludeRepository := { x => false },
-  // Maven central wants some extra metadata to keep things 'clean'.
-  pomExtra := (
-    <scm>
-      <url>git@github.com:scala/jardiff.git</url>
-      <connection>scm:git:git@github.com:scala/jardiff.git</connection>
-    </scm>
-    <developers>
-      <developer>
-        <id>retronym</id>
-        <name>Jason Zaugg</name>
-      </developer>
-    </developers>)
-)
-
 
 lazy val root = (
   project.in(file("."))
   aggregate(core)
   settings(
     name := buildName,
-    publish := {()},
-    publishLocal := {()}
+    skip in publish := true,
   )
 )
 
 lazy val core = (
   project.
   settings(
-    scalaVersion := "2.13.0-RC2",
     libraryDependencies ++= Seq(
       "commons-cli" % "commons-cli" % "1.4",
       "org.ow2.asm" % "asm" % AsmVersion,
@@ -65,8 +40,8 @@ lazy val core = (
       case "module-info.class" => MergeStrategy.discard
       case "rootdoc.txt" => MergeStrategy.discard
       case x => (assemblyMergeStrategy in assembly).value(x)
-    }
-  ).settings(sonatypePublishSettings:_*)
+    },
+  )
 )
 
 val AsmVersion = "7.1"
