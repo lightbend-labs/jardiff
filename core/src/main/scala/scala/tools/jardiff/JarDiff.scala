@@ -41,8 +41,9 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
         val status = git.status().call()
         val ignored = status.getIgnoredNotInIndex
         ignored.forEach(p => IOUtil.deleteRecursive(targetBase.resolve(p)))
+        val msg = s"jardiff textified output of: ${fs.mkString(File.pathSeparator)}"
         git.add().addFilepattern(".").call()
-        git.commit().setAllowEmpty(true).setAll(true).setMessage("jardiff textified output of: " + fs.mkString(File.pathSeparator)).call()
+        git.commit().setAllowEmpty(true).setAll(true).setMessage(msg).setSign(false).call()
       }
 
       files match {
