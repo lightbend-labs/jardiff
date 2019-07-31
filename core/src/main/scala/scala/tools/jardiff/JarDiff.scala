@@ -119,7 +119,10 @@ object JarDiff {
     else List(path)
   }
   def apply(files: List[List[Path]], config: JarDiff.Config): JarDiff = {
-    val renderers = Map("class" -> List(new AsmTextifyRenderer(config.code, config.raw, config.privates), new ScalapRenderer())).withDefault(_ => List(IdentityRenderer))
+    val renderers = Map(
+      "class" -> List(new AsmTextifyRenderer(config.code, config.raw, config.privates), new ScalapRenderer()),
+      "sig" -> List(new ScalapSigRenderer())
+    ).withDefault(_ => List(IdentityRenderer))
     new JarDiff(files, config, renderers)
   }
 

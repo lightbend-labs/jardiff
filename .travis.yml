@@ -12,7 +12,7 @@ scala:
   - 2.10.6
 
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 script:
   - sbt package
