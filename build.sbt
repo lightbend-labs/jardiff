@@ -69,4 +69,4 @@ lazy val core = (
   ).settings(sonatypePublishSettings:_*)
 )
 
-val AsmVersion = "7.1"
+val AsmVersion = "7.2"
