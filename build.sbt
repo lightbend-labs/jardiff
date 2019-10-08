@@ -44,4 +44,4 @@ lazy val core = (
   )
 )
 
-val AsmVersion = "7.1"
+val AsmVersion = "7.2"
