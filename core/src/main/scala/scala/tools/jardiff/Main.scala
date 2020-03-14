@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Lightbend Inc. <http://www.lightbenc.com>
+ * Copyright (C) Lightbend Inc. <https://www.lightbend.com>
  */
 
 package scala.tools.jardiff
