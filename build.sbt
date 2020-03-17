@@ -4,7 +4,9 @@ inThisBuild(Seq[Setting[_]](
   version := "1.0-SNAPSHOT",
   organization := "org.scala-lang",
   scalaVersion := "2.13.0",
-  licenses := List(("Scala license", url("https://github.com/scala/jardiff/blob/master/LICENSE"))),
+  startYear := Some(2017),
+  organizationName := "Lightbend Inc. <https://www.lightbend.com>",
+  licenses := List(("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt"))),
   homepage := Some(url("http://github.com/scala/jardiff")),
   scmInfo := Some(ScmInfo(url("https://github.com/scala/jardiff"), "scm:git:git@github.com:scala/jardiff.git")),
   developers := List(
@@ -36,6 +38,7 @@ lazy val core = (
       "ch.qos.logback" % "logback-classic" % "1.2.3"
     ),
     name := buildName + "-core",
+    headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
     assemblyMergeStrategy in assembly := {
       case "module-info.class" => MergeStrategy.discard
       case "rootdoc.txt" => MergeStrategy.discard
