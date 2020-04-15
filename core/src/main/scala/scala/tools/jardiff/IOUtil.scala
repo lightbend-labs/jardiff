@@ -13,7 +13,7 @@ import java.util
 object IOUtil {
   def rootPath(fileOrZip: Path): Path = {
     if (fileOrZip.getFileName.toString.endsWith(".jar")) {
-      val uri = URI.create("jar:file:" + fileOrZip.toUri.getPath)
+      val uri = URI.create(s"jar:${fileOrZip.toUri}")
       newFileSystem(uri, new util.HashMap[String, Any]()).getPath("/")
     } else {
       val extSlash = ".jar/"
