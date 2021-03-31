@@ -1,9 +1,9 @@
 val buildName = "jardiff"
 
 inThisBuild(Seq[Setting[_]](
-  version := "1.0-SNAPSHOT",
+  version := "2.0.0-SNAPSHOT",
   organization := "org.scala-lang",
-  scalaVersion := "2.13.0",
+  scalaVersion := "2.12.13",
   startYear := Some(2017),
   organizationName := "Lightbend Inc. <https://www.lightbend.com>",
   licenses := List(("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt"))),
@@ -17,18 +17,35 @@ inThisBuild(Seq[Setting[_]](
 
 lazy val root = (
   project.in(file("."))
-  aggregate(core)
+  aggregate(core, cli, sbtPlugin)
   settings(
     name := buildName,
     skip in publish := true,
   )
 )
 
-lazy val core = (
+lazy val cli = (
   project.
   settings(
     libraryDependencies ++= Seq(
       "commons-cli" % "commons-cli" % "1.4",
+      "org.scalatest" %% "scalatest" % "3.1.1" % Test,
+    ),
+    name := buildName + "-cli",
+    headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
+    assemblyMergeStrategy in assembly := {
+      case "module-info.class" => MergeStrategy.discard
+      case "rootdoc.txt" => MergeStrategy.discard
+      case x => (assemblyMergeStrategy in assembly).value(x)
+    },
+  )
+  .dependsOn(core)
+)
+
+lazy val core = (
+  project.
+  settings(
+    libraryDependencies ++= Seq(
       "org.ow2.asm" % "asm" % AsmVersion,
       "org.ow2.asm" % "asm-util" % AsmVersion,
       "org.scala-lang" % "scalap" % System.getProperty("scalap.version", scalaVersion.value),
@@ -40,12 +57,19 @@ lazy val core = (
     ),
     name := buildName + "-core",
     headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
-    assemblyMergeStrategy in assembly := {
-      case "module-info.class" => MergeStrategy.discard
-      case "rootdoc.txt" => MergeStrategy.discard
-      case x => (assemblyMergeStrategy in assembly).value(x)
-    },
   )
 )
+
+lazy val sbtPlugin =
+  project.
+  enablePlugins(SbtPlugin).
+  settings(
+    name := "sbt-jardiff",
+    headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
+    scriptedLaunchOpts := { scriptedLaunchOpts.value ++
+      Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
+    },
+    scriptedBufferLog := false
+  ).dependsOn(core)
 
 val AsmVersion = "7.2"

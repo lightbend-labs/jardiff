@@ -1,0 +1,133 @@
+diff --git a/META-INF/MANIFEST.MF b/META-INF/MANIFEST.MF
+deleted file mode 100644
+index c59a4dc..0000000
+--- a/META-INF/MANIFEST.MF
++++ /dev/null
+@@ -1,9 +0,0 @@
+-Manifest-Version: 1.0
+-Specification-Title: exampleproject
+-Specification-Version: 0.1.0
+-Specification-Vendor: org.example
+-Implementation-Title: exampleproject
+-Implementation-Version: 0.1.0
+-Implementation-Vendor: org.example
+-Implementation-Vendor-Id: org.example
+-
+diff --git a/org/example/Example$.class.asm b/org/example/Example$.class.asm
+new file mode 100644
+index 0000000..5b35e83
+--- /dev/null
++++ b/org/example/Example$.class.asm
+@@ -0,0 +1,45 @@
++// class version 52.0 (52)
++// access flags 0x31
++public final class org/example/Example$ {
++
++
++  // access flags 0x19
++  public final static Lorg/example/Example$; MODULE$
++
++  // access flags 0x1A
++  private final static I privatefield
++
++  // access flags 0x9
++  public static <clinit>()V
++    NEW org/example/Example$
++    DUP
++    INVOKESPECIAL org/example/Example$.<init> ()V
++    PUTSTATIC org/example/Example$.MODULE$ : Lorg/example/Example$;
++    BIPUSH 7
++    PUTSTATIC org/example/Example$.privatefield : I
++    RETURN
++    MAXSTACK = 2
++    MAXLOCALS = 0
++
++  // access flags 0x2
++  private <init>()V
++    ALOAD 0
++    INVOKESPECIAL java/lang/Object.<init> ()V
++    RETURN
++    MAXSTACK = 1
++    MAXLOCALS = 1
++
++  // access flags 0x1
++  public member()Ljava/lang/String;
++    LDC "public has method body"
++    ARETURN
++    MAXSTACK = 1
++    MAXLOCALS = 1
++
++  // access flags 0x2
++  private privatethis()Ljava/lang/String;
++    LDC "privatethis has method body"
++    ARETURN
++    MAXSTACK = 1
++    MAXLOCALS = 1
++}
+diff --git a/org/example/Example.class.asm b/org/example/Example.class.asm
+new file mode 100644
+index 0000000..a9f0e10
+--- /dev/null
++++ b/org/example/Example.class.asm
+@@ -0,0 +1,13 @@
++// class version 52.0 (52)
++// access flags 0x31
++public final class org/example/Example {
++
++
++  // access flags 0x9
++  public static member()Ljava/lang/String;
++    GETSTATIC org/example/Example$.MODULE$ : Lorg/example/Example$;
++    INVOKEVIRTUAL org/example/Example$.member ()Ljava/lang/String;
++    ARETURN
++    MAXSTACK = 1
++    MAXLOCALS = 0
++}
+diff --git a/org/example/Example.class.scalap b/org/example/Example.class.scalap
+new file mode 100644
+index 0000000..d27f104
+--- /dev/null
++++ b/org/example/Example.class.scalap
+@@ -0,0 +1,5 @@
++package org.example
++object Example extends scala.AnyRef {
++  def this() = { /* compiled code */ }
++  def member: java.lang.String = { /* compiled code */ }
++}
+diff --git a/org/example/OtherExample.class.asm b/org/example/OtherExample.class.asm
+new file mode 100644
+index 0000000..78d9301
+--- /dev/null
++++ b/org/example/OtherExample.class.asm
+@@ -0,0 +1,20 @@
++// class version 52.0 (52)
++// access flags 0x21
++public class org/example/OtherExample {
++
++
++  // access flags 0x1
++  public <init>()V
++    ALOAD 0
++    INVOKESPECIAL java/lang/Object.<init> ()V
++    RETURN
++    MAXSTACK = 1
++    MAXLOCALS = 1
++
++  // access flags 0x1
++  public othermember()Ljava/lang/String;
++    LDC "other public has method body"
++    ARETURN
++    MAXSTACK = 1
++    MAXLOCALS = 1
++}
+diff --git a/org/example/OtherExample.class.scalap b/org/example/OtherExample.class.scalap
+new file mode 100644
+index 0000000..6ada8a7
+--- /dev/null
++++ b/org/example/OtherExample.class.scalap
+@@ -0,0 +1,5 @@
++package org.example
++class OtherExample extends scala.AnyRef {
++  def this() = { /* compiled code */ }
++  def othermember: java.lang.String = { /* compiled code */ }
++}

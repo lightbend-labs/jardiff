@@ -8,6 +8,8 @@ bin/
 .history
 .classpath
 .project
+.metals
+.bloop
 **/eclipse.sbt
 **/.cache
 /.idea/
