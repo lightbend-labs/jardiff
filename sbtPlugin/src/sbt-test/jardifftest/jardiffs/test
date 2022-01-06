@@ -1,0 +1,33 @@
+# project original is near-empty. Use it as a reference to jardiff with various options
+# first publish the original
+> project original
+> publishLocal
+# then run jardiff against that project
+> project changed
+> set jardiffOutputStream := new java.io.FileOutputStream("base.out")
+> jardiff
+# and check if the output is as expected
+$ must-mirror base.out expected/base.expected
+# ignore list works both ways
+> set jardiffIgnore := List("Example$*")
+> set jardiffOutputStream := new java.io.FileOutputStream("ignore2.out")
+> jardiff
+> set jardiffIgnore := List("MANIFEST.MF")
+> set jardiffOutputStream := new java.io.FileOutputStream("ignore.out")
+> jardiff
+$ must-mirror ignore.out expected/ignore.expected
+$ must-mirror ignore2.out expected/ignore2.expected
+# omit message bodies
+> set jardiffMethodBodies := false
+> set jardiffOutputStream := new java.io.FileOutputStream("bodies.out")
+> jardiff
+$ must-mirror bodies.out expected/bodies.expected
+> set jardiffRaw := true
+> set jardiffOutputStream := new java.io.FileOutputStream("raw.out")
+> jardiff
+$ must-mirror raw.out expected/raw.expected
+> set jardiffRaw := false
+> set jardiffIncludePrivates := false
+> set jardiffOutputStream := new java.io.FileOutputStream("privates.out")
+> jardiff
+$ must-mirror privates.out expected/privates.expected

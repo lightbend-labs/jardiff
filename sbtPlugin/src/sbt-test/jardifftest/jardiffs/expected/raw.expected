@@ -1,0 +1,99 @@
+diff --git a/org/example/Example$.class.asm b/org/example/Example$.class.asm
+new file mode 100644
+index 0000000..bbbcf39
+--- /dev/null
++++ b/org/example/Example$.class.asm
+@@ -0,0 +1,28 @@
++// class version 52.0 (52)
++// access flags 0x31
++public final class org/example/Example$ {
++
++  // compiled from: Example.scala
++
++  ATTRIBUTE Scala : unknown
++
++  ATTRIBUTE ScalaInlineInfo : unknown
++
++  // access flags 0x19
++  public final static Lorg/example/Example$; MODULE$
++
++  // access flags 0x1A
++  private final static I privatefield
++
++  // access flags 0x9
++  public static <clinit>()V
++
++  // access flags 0x1
++  public member()Ljava/lang/String;
++
++  // access flags 0x2
++  private privatethis()Ljava/lang/String;
++
++  // access flags 0x2
++  private <init>()V
++}
+diff --git a/org/example/Example.class.asm b/org/example/Example.class.asm
+new file mode 100644
+index 0000000..b250bb6
+--- /dev/null
++++ b/org/example/Example.class.asm
+@@ -0,0 +1,13 @@
++// class version 52.0 (52)
++// access flags 0x31
++public final class org/example/Example {
++
++  // compiled from: Example.scala
++
++  @Lscala/reflect/ScalaSignature;(bytes="\u0006\u0005\u001d:QAB\u0004\u0009\u000211QAD\u0004\u0009\u0002=AQAF\u0001\u0005\u0002]AQ\u0001G\u0001\u0005\u0002eAaAI\u0001!\n\u0013I\u0002BB\u0012\u0002A\u0003%A%A\u0004Fq\u0006l\u0007\u000f\\3\u000b\u0005!I\u0011aB3yC6\u0004H.\u001a\u0006\u0002\u0015\u0005\u0019qN]4\u0004\u0001A\u0011Q\"A\u0007\u0002\u000f\u00099Q\u0009_1na2,7CA\u0001\u0011!\u0009\u0009B#D\u0001\u0013\u0015\u0005\u0019\u0012!B:dC2\u000c\u0017BA\u000b\u0013\u0005\u0019\u0009e.\u001f*fM\u00061A(\u001b8jiz\"\u0012\u0001D\u0001\u0007[\u0016l'-\u001a:\u0016\u0003i\u0001\"a\u0007\u0011\u000e\u0003qQ!!\u0008\u0010\u0002\u00091\u000cgn\u001a\u0006\u0002?\u0005!!.\u0019<b\u0013\u0009\u0009CD\u0001\u0004TiJLgnZ\u0001\u000caJLg/\u0019;fi\"L7/\u0001\u0007qe&4\u0018\r^3gS\u0016dG\r\u0005\u0002\u0012K%\u0011aE\u0005\u0002\u0004\u0013:$\u0008")
++
++  ATTRIBUTE ScalaSig : unknown
++
++  // access flags 0x9
++  public static member()Ljava/lang/String;
++}
+diff --git a/org/example/Example.class.scalap b/org/example/Example.class.scalap
+new file mode 100644
+index 0000000..d27f104
+--- /dev/null
++++ b/org/example/Example.class.scalap
+@@ -0,0 +1,5 @@
++package org.example
++object Example extends scala.AnyRef {
++  def this() = { /* compiled code */ }
++  def member: java.lang.String = { /* compiled code */ }
++}
+diff --git a/org/example/OtherExample.class.asm b/org/example/OtherExample.class.asm
+new file mode 100644
+index 0000000..1a22c89
+--- /dev/null
++++ b/org/example/OtherExample.class.asm
+@@ -0,0 +1,18 @@
++// class version 52.0 (52)
++// access flags 0x21
++public class org/example/OtherExample {
++
++  // compiled from: Example.scala
++
++  @Lscala/reflect/ScalaSignature;(bytes="\u0006\u0005y1Aa\u0001\u0003\u0001\u0013!)\u0001\u0003\u0001C\u0001#!)A\u0003\u0001C\u0001+\u0009aq\n\u001e5fe\u0016C\u0018-\u001c9mK*\u0011QAB\u0001\u0008Kb\u000cW\u000e\u001d7f\u0015\u00059\u0011aA8sO\u000e\u00011C\u0001\u0001\u000b!\u0009Ya\"D\u0001\r\u0015\u0005i\u0011!B:dC2\u000c\u0017BA\u0008\r\u0005\u0019\u0009e.\u001f*fM\u00061A(\u001b8jiz\"\u0012A\u0005\u0009\u0003'\u0001i\u0011\u0001B\u0001\u000c_RDWM]7f[\n,'/F\u0001\u0017!\u00099B$D\u0001\u0019\u0015\u0009I\"$\u0001\u0003mC:<'\"A\u000e\u0002\u0009)\u000cg/Y\u0005\u0003;a\u0011aa\u0015;sS:<\u0007")
++
++  ATTRIBUTE ScalaSig : unknown
++
++  ATTRIBUTE ScalaInlineInfo : unknown
++
++  // access flags 0x1
++  public othermember()Ljava/lang/String;
++
++  // access flags 0x1
++  public <init>()V
++}
+diff --git a/org/example/OtherExample.class.scalap b/org/example/OtherExample.class.scalap
+new file mode 100644
+index 0000000..6ada8a7
+--- /dev/null
++++ b/org/example/OtherExample.class.scalap
+@@ -0,0 +1,5 @@
++package org.example
++class OtherExample extends scala.AnyRef {
++  def this() = { /* compiled code */ }
++  def othermember: java.lang.String = { /* compiled code */ }
++}
