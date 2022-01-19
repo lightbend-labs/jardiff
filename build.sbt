@@ -3,7 +3,7 @@ val buildName = "jardiff"
 inThisBuild(Seq[Setting[_]](
   version := "1.0-SNAPSHOT",
   organization := "org.scala-lang",
-  scalaVersion := "2.13.0",
+  scalaVersion := "2.13.8",
   startYear := Some(2017),
   organizationName := "Lightbend Inc. <https://www.lightbend.com>",
   licenses := List(("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt"))),
