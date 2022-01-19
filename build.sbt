@@ -30,15 +30,15 @@ lazy val core = (
   project.
   settings(
     libraryDependencies ++= Seq(
-      "commons-cli" % "commons-cli" % "1.4",
+      "commons-cli" % "commons-cli" % "1.5.0",
       "org.ow2.asm" % "asm" % AsmVersion,
       "org.ow2.asm" % "asm-util" % AsmVersion,
       "org.scala-lang" % "scalap" % System.getProperty("scalap.version", scalaVersion.value),
-      "org.eclipse.jgit" % "org.eclipse.jgit" % "5.3.1.201904271842-r",
+      "org.eclipse.jgit" % "org.eclipse.jgit" % "5.3.9.202012012026-r",
       "org.slf4j" % "slf4j-api" % "1.7.33",
       "org.slf4j" % "log4j-over-slf4j" % "1.7.33", // for any java classes looking for this
       "ch.qos.logback" % "logback-classic" % "1.2.3",
-      "org.scalatest" %% "scalatest" % "3.1.1" % Test,
+      "org.scalatest" %% "scalatest" % "3.1.4" % Test,
     ),
     name := buildName + "-core",
     headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
