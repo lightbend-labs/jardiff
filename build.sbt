@@ -3,7 +3,7 @@ val buildName = "jardiff"
 inThisBuild(Seq[Setting[_]](
   version := "1.0-SNAPSHOT",
   organization := "org.scala-lang",
-  scalaVersion := "2.13.0",
+  scalaVersion := "2.13.8",
   startYear := Some(2017),
   organizationName := "Lightbend Inc. <https://www.lightbend.com>",
   licenses := List(("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt"))),
@@ -20,9 +20,11 @@ lazy val root = (
   aggregate(core)
   settings(
     name := buildName,
-    skip in publish := true,
+    publish / skip := true,
   )
 )
+
+val AsmVersion = "7.2"
 
 lazy val core = (
   project.
@@ -40,12 +42,10 @@ lazy val core = (
     ),
     name := buildName + "-core",
     headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
-    assemblyMergeStrategy in assembly := {
+    assembly / assemblyMergeStrategy := {
       case "module-info.class" => MergeStrategy.discard
       case "rootdoc.txt" => MergeStrategy.discard
-      case x => (assemblyMergeStrategy in assembly).value(x)
+      case x => (assembly / assemblyMergeStrategy).value(x)
     },
   )
 )
-
-val AsmVersion = "7.2"
