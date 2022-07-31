@@ -38,7 +38,7 @@ lazy val core = (
       "org.slf4j" % "slf4j-api" % "1.7.36",
       "org.slf4j" % "log4j-over-slf4j" % "1.7.36", // for any java classes looking for this
       "ch.qos.logback" % "logback-classic" % "1.2.11",
-      "org.scalatest" %% "scalatest" % "3.2.12" % Test,
+      "org.scalatest" %% "scalatest" % "3.2.13" % Test,
     ),
     name := buildName + "-core",
     headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
