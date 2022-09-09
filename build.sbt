@@ -34,7 +34,7 @@ lazy val core = (
       "org.ow2.asm" % "asm" % AsmVersion,
       "org.ow2.asm" % "asm-util" % AsmVersion,
       "org.scala-lang" % "scalap" % System.getProperty("scalap.version", scalaVersion.value),
-      "org.eclipse.jgit" % "org.eclipse.jgit" % "6.2.0.202206071550-r",
+      "org.eclipse.jgit" % "org.eclipse.jgit" % "6.3.0.202209071007-r",
       "org.slf4j" % "slf4j-api" % "1.7.36",
       "org.slf4j" % "log4j-over-slf4j" % "1.7.36", // for any java classes looking for this
       "ch.qos.logback" % "logback-classic" % "1.2.11",
