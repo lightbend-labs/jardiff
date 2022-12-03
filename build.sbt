@@ -37,7 +37,7 @@ lazy val core = (
       "org.eclipse.jgit" % "org.eclipse.jgit" % "6.3.0.202209071007-r",
       "org.slf4j" % "slf4j-api" % "2.0.5",
       "org.slf4j" % "log4j-over-slf4j" % "2.0.5", // for any java classes looking for this
-      "ch.qos.logback" % "logback-classic" % "1.4.4",
+      "ch.qos.logback" % "logback-classic" % "1.4.5",
       "org.scalatest" %% "scalatest" % "3.2.14" % Test,
     ),
     name := buildName + "-core",
