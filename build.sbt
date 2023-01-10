@@ -7,8 +7,8 @@ inThisBuild(Seq[Setting[_]](
   startYear := Some(2017),
   organizationName := "Lightbend Inc. <https://www.lightbend.com>",
   licenses := List(("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt"))),
-  homepage := Some(url("http://github.com/scala/jardiff")),
-  scmInfo := Some(ScmInfo(url("https://github.com/scala/jardiff"), "scm:git:git@github.com:scala/jardiff.git")),
+  homepage := Some(url("https://github.com/lightbend-labs/jardiff")),
+  scmInfo := Some(ScmInfo(url("https://github.com/lightbend-labs/jardiff"), "scm:git:git@github.com:lightbend-labs/jardiff.git")),
   developers := List(
     Developer("retronym", "Jason Zaugg", "@retronym", url("https://github.com/retronym")),
   ),
