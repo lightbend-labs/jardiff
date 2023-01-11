@@ -43,8 +43,8 @@ lazy val core = (
     name := buildName + "-core",
     headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
     assembly / assemblyMergeStrategy := {
-      case "module-info.class" => MergeStrategy.discard
       case "rootdoc.txt" => MergeStrategy.discard
+      case x if x.endsWith("/module-info.class") => MergeStrategy.discard
       case x => (assembly / assemblyMergeStrategy).value(x)
     },
   )
