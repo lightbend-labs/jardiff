@@ -1,8 +1,10 @@
-JAR diff for Scala
-==================
+# JAR differ
 
 A tool for generating bytecode diffs
-====================================
+
+Requires JDK 11+
+
+## About
 
 JarDiff is a tool for generating detailed but comprehensible diffs of sets (JAR or directory) of Java
 classfiles.
@@ -18,8 +20,7 @@ argument is provided, the initial commit is rendered.
 By default, a temporary git repository is used and deleted on exit. Use `--git` to provide a custom
 location for the repository that can be inspected after the tool has run.
 
-Installing
-----------
+## Installing
 
 ### macOS
 
@@ -62,13 +63,11 @@ Each VERSION may designate a single file, a directory, JAR file or a
 % jardiff --git /tmp/diff-repo --quiet v1.jar v2.jar v3.jar
 ```
 
-Building
---------
+## Building
 
 After cloning this project, use `sbt clean core/assembly`.
 
-Sample Output
--------------
+## Sample Output
 
 ### Scala 2.11 vs 2.12 trait encoding changes
 
