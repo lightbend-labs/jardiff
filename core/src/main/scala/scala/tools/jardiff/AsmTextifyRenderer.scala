@@ -7,7 +7,7 @@ package scala.tools.jardiff
 import java.io.PrintWriter
 import java.nio.file.{Files, Path}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import org.objectweb.asm.{ClassReader, Opcodes}
 import org.objectweb.asm.tree.{ClassNode, FieldNode, InnerClassNode, MethodNode}
 import org.objectweb.asm.util.TraceClassVisitor

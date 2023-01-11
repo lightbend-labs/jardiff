@@ -12,7 +12,7 @@ inThisBuild(Seq[Setting[_]](
   developers := List(
     Developer("retronym", "Jason Zaugg", "@retronym", url("https://github.com/retronym")),
   ),
-  scalacOptions := Seq("-feature", "-deprecation", "-Xlint")
+  scalacOptions := Seq("-feature", "-deprecation", "-Xlint", "-Werror")
 ))
 
 lazy val root = (

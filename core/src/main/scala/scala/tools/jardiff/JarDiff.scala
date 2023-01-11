@@ -14,7 +14,7 @@ import org.eclipse.jgit.lib.RepositoryCache
 import org.eclipse.jgit.revwalk.RevCommit
 
 import scala.tools.jardiff.JGitUtil._
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: String => List[FileRenderer]) {
   private val targetBase = config.gitRepo.getOrElse(Files.createTempDirectory("jardiff-"))
@@ -55,6 +55,7 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
           commits.sliding(2).foreach {
             case Seq(commit1, commit2) =>
               differenceFound ||= printDiff(git, commit1, commit2)
+            case _ =>
           }
       }
     } finally {
@@ -103,7 +104,7 @@ final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: 
     val extension = if (ix >= 0) sourceFile.getFileName.toString.substring(ix + 1) else ""
     if (!Files.isSymbolicLink(sourceFile)) {
       for (renderer <- renderers(extension)) {
-        val outPath = targetFile.resolveSibling(targetFile.getFileName + renderer.outFileExtension)
+        val outPath = targetFile.resolveSibling(targetFile.getFileName.toString + renderer.outFileExtension)
         renderer.render(sourceFile, outPath)
       }
     }

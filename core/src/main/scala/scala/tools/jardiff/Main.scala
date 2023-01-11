@@ -11,7 +11,7 @@ import org.apache.commons.cli
 import org.apache.commons.cli.{CommandLine, DefaultParser, HelpFormatter, Options}
 import org.eclipse.jgit.util.io.NullOutputStream
 
-import scala.collection.JavaConverters.collectionAsScalaIterableConverter
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 import scala.util.control.NonFatal
 
