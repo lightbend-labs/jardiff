@@ -9,7 +9,7 @@ Requires JDK 11+
 JarDiff is a tool for generating detailed but comprehensible diffs of sets (JAR or directory) of Java
 classfiles.
 
-Class files are rendered with ASM's [`Textifier`](http://asm.ow2.org/asm50/javadoc/user/org/objectweb/asm/util/Textifier.html)
+Class files are rendered with ASM's [`Textifier`](https://asm.ow2.io/javadoc/org/objectweb/asm/util/Textifier.html)
 and with `scalap`. Other files are rendered as-is.
 
 The rendered files are commited into a Git repository, one commit per provided command line argument.
