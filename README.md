@@ -181,7 +181,7 @@ trait C {
 diff --git a/C.class.asm b/C.class.asm
 index 52a43d5..bdb0541 100644
 --- a/C.class.asm
-+++ b/C.class.asm
++++ b/C.class.asm 
 @@ -4,12 +4,12 @@
  
  
