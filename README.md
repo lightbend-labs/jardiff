@@ -12,7 +12,7 @@ classfiles.
 Class files are rendered with ASM's [`Textifier`](https://asm.ow2.io/javadoc/org/objectweb/asm/util/Textifier.html)
 and with `scalap`. Other files are rendered as-is.
 
-The rendered files are commited into a Git repository, one commit per provided command line argument.
+The rendered files are committed into a Git repository, one commit per provided command line argument.
 
 The diffs between these are rendered to standard out (unless `--quiet` is provided). If only a single
 argument is provided, the initial commit is rendered.
