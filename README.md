@@ -2,7 +2,7 @@
 
 A tool for generating bytecode diffs
 
-Requires JDK 11+
+Requires JDK 8+
 
 ## About
 
