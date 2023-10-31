@@ -1,7 +1,6 @@
 val buildName = "jardiff"
 
 inThisBuild(Seq[Setting[_]](
-  version := "1.0-SNAPSHOT",
   organization := "org.scala-lang",
   scalaVersion := "2.13.12",
   startYear := Some(2017),
@@ -12,7 +11,30 @@ inThisBuild(Seq[Setting[_]](
   developers := List(
     Developer("retronym", "Jason Zaugg", "@retronym", url("https://github.com/retronym")),
   ),
-  scalacOptions := Seq("-feature", "-deprecation", "-Xlint", "-Werror")
+  scalacOptions := Seq("-feature", "-deprecation", "-Xlint", "-Werror"),
+  githubWorkflowOSes := Seq("ubuntu-latest", "macos-latest"),
+  githubWorkflowJavaVersions := Seq(
+    JavaSpec.temurin("8"),
+    JavaSpec.temurin("11"),
+    JavaSpec.temurin("17")
+  ),
+  githubWorkflowTargetTags ++= Seq ("v*"),
+  githubWorkflowPublishTargetBranches :=  Seq(
+    RefPredicate.StartsWith(Ref.Tag("v")),
+    RefPredicate.Equals(Ref.Branch("main"))
+  ),
+  githubWorkflowPublish := Seq (
+    WorkflowStep.Sbt(
+      commands = List("ci-release"),
+      name = Some("Publish project"),
+      env = Map(
+        "PGP_PASSPHRASE" -> "${{ secrets.PGP_PASSPHRASE }}",
+        "PGP_SECRET" -> "${{ secrets.PGP_SECRET }}",
+        "SONATYPE_PASSWORD" -> "${{ secrets.SONATYPE_PASSWORD }}",
+        "SONATYPE_USERNAME" -> "${{ secrets.SONATYPE_USERNAME }}"
+      )
+    )
+  )
 ))
 
 lazy val root = (
