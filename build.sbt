@@ -34,25 +34,27 @@ inThisBuild(Seq[Setting[_]](
         "SONATYPE_USERNAME" -> "${{ secrets.SONATYPE_USERNAME }}"
       )
     )
-  )
+  ),
+  headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
 ))
 
 lazy val root = (
   project.in(file("."))
-  aggregate(core)
+  aggregate(core, cli)
   settings(
     name := buildName,
     publish / skip := true,
+    publishArtifact := false,
+    publish := {},
+    publishLocal := {}
   )
 )
 
 val AsmVersion = "9.6"
 
-lazy val core = (
-  project.
+lazy val core = project.
   settings(
     libraryDependencies ++= Seq(
-      "commons-cli" % "commons-cli" % "1.5.0",
       "org.ow2.asm" % "asm" % AsmVersion,
       "org.ow2.asm" % "asm-util" % AsmVersion,
       "org.scala-lang" % "scalap" % System.getProperty("scalap.version", scalaVersion.value),
@@ -62,12 +64,23 @@ lazy val core = (
       "ch.qos.logback" % "logback-classic" % "1.3.11",
       "org.scalatest" %% "scalatest" % "3.2.17" % Test,
     ),
-    name := buildName + "-core",
-    headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
+    name := buildName + "-core"
+  )
+
+lazy val cli = project.
+  settings(
+    libraryDependencies ++= Seq(
+      "commons-cli" % "commons-cli" % "1.5.0",
+    ),
+    name := buildName + "-cli",
     assembly / assemblyMergeStrategy := {
       case "rootdoc.txt" => MergeStrategy.discard
       case x if x.endsWith("module-info.class") => MergeStrategy.discard
       case x => (assembly / assemblyMergeStrategy).value(x)
     },
-  )
-)
+    // cli is not meant to be published
+    publish / skip := true,
+    publishArtifact := false,
+    publish := {},
+    publishLocal := {}
+  ).dependsOn(core)
