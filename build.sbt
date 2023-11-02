@@ -1,7 +1,7 @@
 val buildName = "jardiff"
 
 inThisBuild(Seq[Setting[_]](
-  organization := "org.scala-lang",
+  organization := "com.lightbend",
   scalaVersion := "2.13.12",
   startYear := Some(2017),
   organizationName := "Lightbend Inc. <https://www.lightbend.com>",
