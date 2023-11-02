@@ -38,6 +38,11 @@ inThisBuild(Seq[Setting[_]](
   headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
 ))
 
+ThisBuild / publishMavenStyle      := true
+ThisBuild / publishTo              := sonatypePublishToBundle.value
+ThisBuild / test / publishArtifact := false
+ThisBuild / pomIncludeRepository   := (_ => false)
+
 lazy val root = (
   project.in(file("."))
   aggregate(core, cli)
@@ -70,7 +75,7 @@ lazy val core = project.
 lazy val cli = project.
   settings(
     libraryDependencies ++= Seq(
-      "commons-cli" % "commons-cli" % "1.5.0",
+      "commons-cli" % "commons-cli" % "1.6.0",
     ),
     name := buildName + "-cli",
     assembly / assemblyMergeStrategy := {
