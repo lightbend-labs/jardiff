@@ -37,6 +37,11 @@ inThisBuild(Seq[Setting[_]](
   )
 ))
 
+ThisBuild / publishMavenStyle      := true
+ThisBuild / publishTo              := sonatypePublishToBundle.value
+ThisBuild / test / publishArtifact := false
+ThisBuild / pomIncludeRepository   := (_ => false)
+
 lazy val root = (
   project.in(file("."))
   aggregate(core)
