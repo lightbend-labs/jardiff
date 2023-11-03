@@ -4,6 +4,8 @@
 
 package scala.tools.jardiff
 
+import JDKCollectionConvertersCompat.Converters._
+
 import java.io.{File, OutputStream}
 import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
@@ -14,7 +16,6 @@ import org.eclipse.jgit.lib.RepositoryCache
 import org.eclipse.jgit.revwalk.RevCommit
 
 import scala.tools.jardiff.JGitUtil._
-import scala.jdk.CollectionConverters._
 
 final class JarDiff(files: List[List[Path]], config: JarDiff.Config, renderers: String => List[FileRenderer]) {
   private val targetBase = config.gitRepo.getOrElse(Files.createTempDirectory("jardiff-"))

@@ -1,5 +1,8 @@
 val buildName = "jardiff"
 
+val scala212Version = "2.12.18"
+val scala213Version = "2.13.12"
+
 inThisBuild(Seq[Setting[_]](
   organization := "com.lightbend",
   scalaVersion := "2.13.12",
@@ -49,6 +52,8 @@ lazy val root = (
   settings(
     name := buildName,
     publish / skip := true,
+    // See https://github.com/sbt/sbt/issues/4262#issuecomment-405607763
+    crossScalaVersions := Seq.empty
   )
 )
 
@@ -66,7 +71,9 @@ lazy val core = project.
       "ch.qos.logback" % "logback-classic" % "1.3.11",
       "org.scalatest" %% "scalatest" % "3.2.17" % Test,
     ),
-    name := buildName + "-core"
+    name := buildName + "-core",
+    crossScalaVersions := Seq(scala212Version, scala213Version),
+    scalaVersion := scala212Version
   )
 
 lazy val cli = project.
@@ -80,6 +87,11 @@ lazy val cli = project.
       case x if x.endsWith("module-info.class") => MergeStrategy.discard
       case x => (assembly / assemblyMergeStrategy).value(x)
     },
+    // Having Scala 2.13 here in crossScalaVersions is redundant but due to how
+    // sbt-github-actions generates the sbt test command (i.e. sbt '++ 2.13.12' test),
+    // sbt's update task cannot handle projects with different crossScalaVersions well
+    crossScalaVersions := Seq(scala212Version, scala213Version),
+    scalaVersion := scala212Version,
     // cli is not meant to be published
     publish / skip := true,
   ).dependsOn(core)

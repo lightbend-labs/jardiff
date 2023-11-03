@@ -4,6 +4,8 @@
 
 package scala.tools.jardiff
 
+import JDKCollectionConvertersCompat.Converters._
+
 import java.io.{ByteArrayOutputStream, File, PrintWriter}
 import java.nio.file._
 
@@ -11,7 +13,6 @@ import org.apache.commons.cli
 import org.apache.commons.cli.{CommandLine, DefaultParser, HelpFormatter, Options}
 import org.eclipse.jgit.util.io.NullOutputStream
 
-import scala.jdk.CollectionConverters._
 import scala.util.Try
 import scala.util.control.NonFatal
 
