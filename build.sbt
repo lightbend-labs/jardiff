@@ -41,9 +41,6 @@ inThisBuild(Seq[Setting[_]](
   headerLicense := Some(HeaderLicense.Custom("Copyright (C) Lightbend Inc. <https://www.lightbend.com>")),
 ))
 
-ThisBuild / publishMavenStyle      := true
-ThisBuild / publishTo              := sonatypePublishToBundle.value
-ThisBuild / test / publishArtifact := false
 ThisBuild / pomIncludeRepository   := (_ => false)
 
 lazy val root = (
