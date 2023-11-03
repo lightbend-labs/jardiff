@@ -49,9 +49,6 @@ lazy val root = (
   settings(
     name := buildName,
     publish / skip := true,
-    publishArtifact := false,
-    publish := {},
-    publishLocal := {}
   )
 )
 
@@ -85,7 +82,4 @@ lazy val cli = project.
     },
     // cli is not meant to be published
     publish / skip := true,
-    publishArtifact := false,
-    publish := {},
-    publishLocal := {}
   ).dependsOn(core)
