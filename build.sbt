@@ -52,9 +52,6 @@ lazy val root = (
   settings(
     name := buildName,
     publish / skip := true,
-    publishArtifact := false,
-    publish := {},
-    publishLocal := {},
     // See https://github.com/sbt/sbt/issues/4262#issuecomment-405607763
     crossScalaVersions := Seq.empty
   )
@@ -97,7 +94,4 @@ lazy val cli = project.
     scalaVersion := scala212Version,
     // cli is not meant to be published
     publish / skip := true,
-    publishArtifact := false,
-    publish := {},
-    publishLocal := {}
   ).dependsOn(core)
