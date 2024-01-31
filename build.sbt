@@ -70,7 +70,19 @@ lazy val core = project.
     ),
     name := buildName + "-core",
     crossScalaVersions := Seq(scala212Version, scala213Version),
-    scalaVersion := scala212Version
+    scalaVersion := scala212Version,
+    scalacOptions ++= {
+      // We publish the core library into maven which is done in CI via ci-release
+      // so we should only enable the optimizer in CI
+      if (insideCI.value) {
+        val log = sLog.value
+        log.info("Running in CI, enabling Scala2 optimizer <sources> mode for core")
+        Seq(
+          "-opt-inline-from:<sources>",
+          "-opt:l:inline"
+        )
+      } else Nil
+    }
   )
 
 lazy val cli = project.
@@ -91,4 +103,18 @@ lazy val cli = project.
     scalaVersion := scala212Version,
     // cli is not meant to be published
     publish / skip := true,
+    // We are creating a fatjar here for distribution so we can do global optimization
+    // using scala.** while omitting the JDK stdlib since we don't know what JDK version
+    // the user will run on. If we implement a way to make the cli release in CI then we
+    // can also use insideCI
+    scalacOptions ++= Seq(
+      "-opt-inline-from:scala.**",
+      "-opt:l:inline"
+    ),
+    assembly := {
+      // The Scala 2 optimizer can cause issues if the codebase is not compiled in a clean
+      // state so lets make sure that we force clean before assembling the cli jar
+      val _ = clean.value
+      assembly.value
+    }
   ).dependsOn(core)
