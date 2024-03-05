@@ -1,11 +1,11 @@
 val buildName = "jardiff"
 
 val scala212Version = "2.12.19"
-val scala213Version = "2.13.12"
+val scala213Version = "2.13.13"
 
 inThisBuild(Seq[Setting[_]](
   organization := "com.lightbend",
-  scalaVersion := "2.13.12",
+  scalaVersion := "2.13.13",
   startYear := Some(2017),
   organizationName := "Lightbend Inc. <https://www.lightbend.com>",
   licenses := List(("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt"))),
