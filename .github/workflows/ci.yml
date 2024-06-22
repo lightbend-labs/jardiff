@@ -22,7 +22,7 @@ jobs:
     name: Build and Test
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-12]
         scala: [2.13.14]
         java:
           - temurin@8
