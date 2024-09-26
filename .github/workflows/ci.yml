@@ -154,12 +154,12 @@ jobs:
       - name: Setup sbt
         uses: sbt/setup-sbt@v1
 
-      - name: Download target directories (2.13.14)
+      - name: Download target directories (2.13.15)
         uses: actions/download-artifact@v4
         with:
-          name: target-${{ matrix.os }}-2.13.14-${{ matrix.java }}
+          name: target-${{ matrix.os }}-2.13.15-${{ matrix.java }}
 
-      - name: Inflate target directories (2.13.14)
+      - name: Inflate target directories (2.13.15)
         run: |
           tar xf targets.tar
           rm targets.tar
