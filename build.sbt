@@ -65,7 +65,7 @@ lazy val root = (
   )
 )
 
-val AsmVersion = "9.7"
+val AsmVersion = "9.7.1"
 
 lazy val core = project.
   settings(
