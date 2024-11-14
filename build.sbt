@@ -1,11 +1,11 @@
 val buildName = "jardiff"
 
 val scala212Version = "2.12.19"
-val scala213Version = "2.13.14"
+val scala213Version = "2.13.15"
 
 inThisBuild(Seq[Setting[_]](
   organization := "com.lightbend",
-  scalaVersion := "2.13.14",
+  scalaVersion := "2.13.15",
   startYear := Some(2017),
   organizationName := "Lightbend Inc. <https://www.lightbend.com>",
   licenses := List(("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt"))),
@@ -65,7 +65,7 @@ lazy val root = (
   )
 )
 
-val AsmVersion = "9.7"
+val AsmVersion = "9.7.1"
 
 lazy val core = project.
   settings(
@@ -74,8 +74,8 @@ lazy val core = project.
       "org.ow2.asm" % "asm-util" % AsmVersion,
       "org.scala-lang" % "scalap" % System.getProperty("scalap.version", scalaVersion.value),
       "org.eclipse.jgit" % "org.eclipse.jgit" % "5.13.2.202306221912-r",
-      "org.slf4j" % "slf4j-api" % "2.0.13",
-      "org.slf4j" % "log4j-over-slf4j" % "2.0.13", // for any java classes looking for this
+      "org.slf4j" % "slf4j-api" % "2.0.16",
+      "org.slf4j" % "log4j-over-slf4j" % "2.0.16", // for any java classes looking for this
       "ch.qos.logback" % "logback-classic" % "1.3.11",
       "org.scalatest" %% "scalatest" % "3.2.19" % Test,
     ),
@@ -99,7 +99,7 @@ lazy val core = project.
 lazy val cli = project.
   settings(
     libraryDependencies ++= Seq(
-      "commons-cli" % "commons-cli" % "1.8.0",
+      "commons-cli" % "commons-cli" % "1.9.0",
     ),
     name := buildName + "-cli",
     assembly / assemblyMergeStrategy := {
