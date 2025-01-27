@@ -15,18 +15,9 @@ inThisBuild(Seq[Setting[_]](
     Developer("retronym", "Jason Zaugg", "@retronym", url("https://github.com/retronym")),
   ),
   scalacOptions := Seq("-feature", "-deprecation", "-Xlint", "-Werror"),
-  // since April 2024 or so, macos-latest gives us a machine that doesn't
-  // have sbt installed (actions/setup-java#627). if we weren't using
-  // sbt-github-actions it would be easy to just edit the workflow directly to
-  // use `brew install sbt`, but it's easier to just stay on macos-12 for as
-  // long as it remains available. I've reported the issue upstream at
-  // sbt/sbt-github-actions#185 . if we do move
-  // to macos-latest, note that it doesn't have temurin@8 anymore (as per
-  // actions/setup-java#625), so we'd also need to change that entry (a few
-  // lines below) from "temurin" to "zulu"
-  githubWorkflowOSes := Seq("ubuntu-latest", "macos-12"),
+  githubWorkflowOSes := Seq("ubuntu-latest", "macos-latest"),
   githubWorkflowJavaVersions := Seq(
-    JavaSpec.temurin("8"),
+    JavaSpec.zulu("8"),  // macos-latest lacks Temurin 8
     JavaSpec.temurin("11"),
     JavaSpec.temurin("17"),
     JavaSpec.temurin("21"),
