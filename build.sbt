@@ -84,7 +84,11 @@ lazy val core = project.
           "-opt:l:inline"
         )
       } else Nil
-    }
+    },
+    assembly / assemblyMergeStrategy := {
+      case x if x.endsWith("module-info.class") => MergeStrategy.discard
+      case x => (assembly / assemblyMergeStrategy).value(x)
+    },
   )
 
 lazy val cli = project.
