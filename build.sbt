@@ -94,7 +94,7 @@ lazy val core = project.
 lazy val cli = project.
   settings(
     libraryDependencies ++= Seq(
-      "commons-cli" % "commons-cli" % "1.9.0",
+      "commons-cli" % "commons-cli" % "1.10.0",
     ),
     name := buildName + "-cli",
     assembly / assemblyMergeStrategy := {
