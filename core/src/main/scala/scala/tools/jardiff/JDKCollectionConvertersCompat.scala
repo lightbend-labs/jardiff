@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) Lightbend Inc. <https://www.lightbend.com>
+ */
+
 package scala.tools.jardiff
 
 import scala.annotation.nowarn
