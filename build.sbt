@@ -22,7 +22,7 @@ inThisBuild(Seq[Setting[_]](
     JavaSpec.temurin("11"),
     JavaSpec.temurin("17"),
     JavaSpec.temurin("21"),
-    JavaSpec.temurin("22"),
+    JavaSpec.temurin("24"),
   ),
   githubWorkflowTargetTags ++= Seq ("v*"),
   githubWorkflowPublishTargetBranches :=  Seq(
