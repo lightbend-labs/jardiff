@@ -29,7 +29,7 @@ jobs:
           - temurin@11
           - temurin@17
           - temurin@21
-          - temurin@24
+          - temurin@23
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch (full)
@@ -69,12 +69,12 @@ jobs:
           java-version: 21
           cache: sbt
 
-      - name: Setup Java (temurin@24)
-        if: matrix.java == 'temurin@24'
+      - name: Setup Java (temurin@23)
+        if: matrix.java == 'temurin@23'
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 24
+          java-version: 23
           cache: sbt
 
       - name: Setup sbt
@@ -143,12 +143,12 @@ jobs:
           java-version: 21
           cache: sbt
 
-      - name: Setup Java (temurin@24)
-        if: matrix.java == 'temurin@24'
+      - name: Setup Java (temurin@23)
+        if: matrix.java == 'temurin@23'
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 24
+          java-version: 23
           cache: sbt
 
       - name: Setup sbt

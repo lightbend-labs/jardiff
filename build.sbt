@@ -22,7 +22,7 @@ inThisBuild(Seq[Setting[_]](
     JavaSpec.temurin("11"),
     JavaSpec.temurin("17"),
     JavaSpec.temurin("21"),
-    JavaSpec.temurin("24"),
+    JavaSpec.temurin("23"), // can't go higher until Scala 2.12.21
   ),
   githubWorkflowTargetTags ++= Seq ("v*"),
   githubWorkflowPublishTargetBranches :=  Seq(
