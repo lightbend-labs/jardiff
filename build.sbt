@@ -5,7 +5,8 @@ val scala213Version = "2.13.17"
 
 inThisBuild(Seq[Setting[_]](
   organization := "com.lightbend",
-  scalaVersion := "2.13.17",
+  scalaVersion := scala213Version,
+  crossScalaVersions := Seq(scala212Version, scala213Version),
   startYear := Some(2017),
   organizationName := "Lightbend Inc. <https://www.lightbend.com>",
   licenses := List(("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt"))),
@@ -21,7 +22,7 @@ inThisBuild(Seq[Setting[_]](
     JavaSpec.temurin("11"),
     JavaSpec.temurin("17"),
     JavaSpec.temurin("21"),
-    JavaSpec.temurin("24"),
+    JavaSpec.temurin("23"), // can't go higher until Scala 2.12.21
   ),
   githubWorkflowTargetTags ++= Seq ("v*"),
   githubWorkflowPublishTargetBranches :=  Seq(
@@ -69,6 +70,7 @@ lazy val core = project.
       "org.slf4j" % "log4j-over-slf4j" % "2.0.17", // for any java classes looking for this
       "ch.qos.logback" % "logback-classic" % "1.3.11",
       "org.scalatest" %% "scalatest" % "3.2.19" % Test,
+      "org.scala-lang.modules" %% "scala-collection-compat" % "2.14.0" % Test
     ),
     name := buildName + "-core",
     crossScalaVersions := Seq(scala212Version, scala213Version),
