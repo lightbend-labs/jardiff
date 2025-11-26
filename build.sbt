@@ -1,7 +1,7 @@
 val buildName = "jardiff"
 
 val scala212Version = "2.12.20"
-val scala213Version = "2.13.17"
+val scala213Version = "2.13.18"
 
 inThisBuild(Seq[Setting[_]](
   organization := "com.lightbend",
