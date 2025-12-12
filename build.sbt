@@ -1,6 +1,6 @@
 val buildName = "jardiff"
 
-val scala212Version = "2.12.20"
+val scala212Version = "2.12.21"
 val scala213Version = "2.13.17"
 
 inThisBuild(Seq[Setting[_]](
