@@ -1,7 +1,7 @@
 val buildName = "jardiff"
 
-val scala212Version = "2.12.20"
-val scala213Version = "2.13.17"
+val scala212Version = "2.12.21"
+val scala213Version = "2.13.18"
 
 inThisBuild(Seq[Setting[_]](
   organization := "com.lightbend",
@@ -22,7 +22,7 @@ inThisBuild(Seq[Setting[_]](
     JavaSpec.temurin("11"),
     JavaSpec.temurin("17"),
     JavaSpec.temurin("21"),
-    JavaSpec.temurin("23"), // can't go higher until Scala 2.12.21
+    JavaSpec.temurin("25"),
   ),
   githubWorkflowTargetTags ++= Seq ("v*"),
   githubWorkflowPublishTargetBranches :=  Seq(
