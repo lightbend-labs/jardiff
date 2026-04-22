@@ -23,6 +23,8 @@ class ScalapRenderer(privates: Boolean) extends FileRenderer {
     } catch {
       case err: ScalaSigParserError =>
         System.err.println("WARN: unable to invoke scalap on: " + in + ": " + err.getMessage)
+      case matchErr: MatchError =>
+        System.err.println("WARN: unable to invoke scalap on: " + in + ": " + matchErr.getMessage)
     }
   }
 }
